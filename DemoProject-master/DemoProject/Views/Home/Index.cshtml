@@ -1,0 +1,62 @@
+﻿@model DemoProject.Models.Employee;
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+</div>
+
+<form asp-controller="Home" asp-action="Index" method="post">
+    <div class="row">
+        <div class="col-md-6">
+            <label class="form-label">Select Start Date</label>
+            <select asp-for="StartDate" class="form-control" required asp-items="@(new SelectList(Model.EmployeeList,"Value","Text"))"></select>
+        </div>
+        <div class="col-md-6">
+            <label class="form-label">Select End Date</label>
+            <select asp-for="EndDate" class="form-control" required asp-items="@(new SelectList(Model.EmployeeList2,"Value","Text"))"></select>
+        </div>
+
+    </div>
+    <div>
+        <br />
+        <input type="submit" value="Show" class="btn btn-success" />
+        <input type="submit" name="action" value="Download" class="btn btn-primary" />
+    </div>
+
+</form>
+@if (ViewBag.EmployeeList != null && ViewBag.EmployeeList.Count > 0)
+{
+   <div class="table-responsive"  style="margin-top:11px;">
+        <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Name</th>
+                <th scope="col">Joining Date</th>
+            </tr>
+        </thead>
+            <tbody style="background-color: #add8e6;">
+                @for (var i = 0; i < ViewBag.EmployeeList.Count; i++)
+                {
+                    var employee = ViewBag.EmployeeList[i];
+                    <tr class="@(i % 2 == 0 ? "even-row" : "odd-row")">
+                        <td>@employee.Id</td>
+                        <td>@employee.Name</td>
+                        <td>@employee.JoiningDate.ToString("yyyy-MM-dd")</td>
+                    </tr>
+                }
+            </tbody>
+    </table>
+   </div>
+}
+<style>
+    .even-row {
+        background-color: #f2f2f2; /* Light gray */
+    }
+
+    .odd-row {
+        background-color: #ffffff; /* White */
+    }
+</style>
