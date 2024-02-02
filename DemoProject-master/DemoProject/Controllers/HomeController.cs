@@ -40,9 +40,7 @@ namespace DemoProject.Controllers
             if (action == "Download")
             {
                 var employeeData1 = _dataAccessLayer.GetEmployees(emp.StartDate, emp.EndDate);
-                string takenBy = "Default User"; // Provide default value for "Taken By"
-                DateTime actionDate = DateTime.Now; // Provide default value for "Action Date"
-                return DownloadExcel(employeeData1, takenBy, actionDate);
+                return DownloadExcel(employeeData1, emp.StartDate, emp.EndDate);
             }
 
             var employeeData = _dataAccessLayer.GetEmployees(emp.StartDate, emp.EndDate);
@@ -50,6 +48,7 @@ namespace DemoProject.Controllers
             {
                 ViewBag.EmployeeList = employeeData;
             }
+           
 
             var employee = BindDropDown();
             var employee2 = BindDropDown2();
@@ -58,7 +57,8 @@ namespace DemoProject.Controllers
             return View(employee);
         }
 
-        private IActionResult DownloadExcel(IEnumerable<Employee> employees, string takenBy, DateTime actionDate)
+
+        private IActionResult DownloadExcel(IEnumerable<Employee> employees, DateTime StartDate, DateTime EndDate)
         {
             using (MemoryStream memoryStream = new MemoryStream())
             {
@@ -67,34 +67,32 @@ namespace DemoProject.Controllers
                     var worksheet = package.Workbook.Worksheets.Add("Employees");
 
                     // Merge cells for the title
-                    worksheet.Cells["A1:C2"].Merge = true;
-                    worksheet.Cells[1, 1].Value = "Demo List";
-                    worksheet.Cells[1, 1, 2, 3].Style.Font.Bold = true;
+                    worksheet.Cells["A1:B1"].Merge = true;
+                    worksheet.Cells[1, 1].Value = StartDate.ToString("yyyy-MM-dd");
+                    worksheet.Cells[1, 1, 1, 2].Style.Font.Bold = true;
 
-                    // Merge cells for "Taken By" information
-                    worksheet.Cells["A4:C4"].Merge = true;
-                    worksheet.Cells[4, 1].Value = "Taken By";
-                    worksheet.Cells[4, 4].Value = ": " + takenBy;
-
-                    // Merge cells for "Action Date" information
-                    worksheet.Cells["A5:C5"].Merge = true;
-                    worksheet.Cells[5, 1].Value = "Action Date";
-                    worksheet.Cells[5, 4].Value = ": " + actionDate.ToString("dd-MM-yyyy , hh:mm tt");
-
+                    worksheet.Cells["C1:D1"].Merge = true;
+                    worksheet.Cells[1, 3].Value = EndDate.ToString("yyyy-MM-dd");
+                    worksheet.Cells[1, 3, 1, 4].Style.Font.Bold = true;
                     // Add column headers
-                    worksheet.Cells["A7"].Value = "ID";
-                    worksheet.Cells["B7"].Value = "Name";
-                    worksheet.Cells["C7"].Value = "Joining Date";
+                    worksheet.Cells["A2"].Value = "ID";
+                    worksheet.Cells["B2"].Value = "Name";
+                    worksheet.Cells["C2"].Value = "Joining Date";
 
                     // Apply styling to the header row
-                    using (var range = worksheet.Cells["A7:C7"])
+                    using (var range = worksheet.Cells["A1:D1"])
+                    {
+                        range.Style.Font.Bold = true;
+                        range.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
+                    }
+                    using (var range = worksheet.Cells["A2:C2"])
                     {
                         range.Style.Font.Bold = true;
                         range.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
                         range.Style.Fill.BackgroundColor.SetColor(Color.LightGray);
                     }
 
-                    int row = 8; // Start from the next row for data
+                    int row = 3; // Start from the next row for data
                     foreach (var employee in employees)
                     {
                         worksheet.Cells[row, 1].Value = employee.Id;
@@ -159,6 +157,7 @@ namespace DemoProject.Controllers
             }
             return employee;
         }
+      
 
         public IActionResult Privacy()
         {

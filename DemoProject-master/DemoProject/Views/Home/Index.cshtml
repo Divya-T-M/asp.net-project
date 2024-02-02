@@ -17,46 +17,62 @@
             <label class="form-label">Select End Date</label>
             <select asp-for="EndDate" class="form-control" required asp-items="@(new SelectList(Model.EmployeeList2,"Value","Text"))"></select>
         </div>
-
     </div>
     <div>
         <br />
         <input type="submit" value="Show" class="btn btn-success" />
         <input type="submit" name="action" value="Download" class="btn btn-primary" />
     </div>
-
 </form>
+
 @if (ViewBag.EmployeeList != null && ViewBag.EmployeeList.Count > 0)
 {
-   <div class="table-responsive"  style="margin-top:11px;">
-        <table class="table table-bordered">
-        <thead>
-            <tr>
-                <th scope="col">ID</th>
-                <th scope="col">Name</th>
-                <th scope="col">Joining Date</th>
-            </tr>
-        </thead>
+    <div class="table-responsive" style="margin-top:11px;">
+        <div>
+            <input type="text" id="searchInput" class="form-control" placeholder="Search...">
+        </div>
+        <table id="employeeTable" class="table table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">ID</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Joining Date</th>
+                </tr>
+            </thead>
             <tbody style="background-color: #add8e6;">
-                @for (var i = 0; i < ViewBag.EmployeeList.Count; i++)
+                @foreach (var employee in ViewBag.EmployeeList)
                 {
-                    var employee = ViewBag.EmployeeList[i];
-                    <tr class="@(i % 2 == 0 ? "even-row" : "odd-row")">
+                    <tr>
                         <td>@employee.Id</td>
                         <td>@employee.Name</td>
                         <td>@employee.JoiningDate.ToString("yyyy-MM-dd")</td>
                     </tr>
                 }
             </tbody>
-    </table>
-   </div>
+        </table>
+    </div>
 }
-<style>
-    .even-row {
-        background-color: #f2f2f2; /* Light gray */
-    }
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("searchInput").addEventListener("keyup", function () {
+            var searchValue = this.value.toLowerCase();
+            var rows = document.getElementById("employeeTable").querySelectorAll("tbody tr");
 
-    .odd-row {
-        background-color: #ffffff; /* White */
-    }
-</style>
+            rows.forEach(function (row) {
+                var found = false;
+                row.querySelectorAll("td").forEach(function (cell) {
+                    if (cell.textContent.toLowerCase().includes(searchValue)) {
+                        found = true;
+                    }
+                });
+                if (found) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        });
+    });
+</script>
+
+
