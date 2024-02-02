@@ -34,12 +34,16 @@
         <table id="employeeTable" class="table table-bordered">
             <thead>
                 <tr>
+                    <th colspan="2">@ViewBag.SelectedStartDate </th>
+                    <th> @ViewBag.SelectedEndDate </th>
+                </tr>
+                <tr style="background-color: #add8e6;">
                     <th scope="col">ID</th>
                     <th scope="col">Name</th>
                     <th scope="col">Joining Date</th>
                 </tr>
             </thead>
-            <tbody style="background-color: #add8e6;">
+            <tbody>
                 @foreach (var employee in ViewBag.EmployeeList)
                 {
                     <tr>

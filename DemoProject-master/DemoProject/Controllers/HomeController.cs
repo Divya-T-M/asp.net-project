@@ -30,7 +30,7 @@ namespace DemoProject.Controllers
             var employee = BindDropDown();
             var employee2 = BindDropDown2();
             employee.EmployeeList2 = employee2.EmployeeList2;
-
+           
             return View(employee);
         }
 
@@ -48,12 +48,13 @@ namespace DemoProject.Controllers
             {
                 ViewBag.EmployeeList = employeeData;
             }
-           
+            ViewBag.SelectedStartDate = emp.StartDate;
+            ViewBag.SelectedEndDate = emp.EndDate;
 
             var employee = BindDropDown();
             var employee2 = BindDropDown2();
             employee.EmployeeList2 = employee2.EmployeeList2;
-
+         
             return View(employee);
         }
 
@@ -157,7 +158,7 @@ namespace DemoProject.Controllers
             }
             return employee;
         }
-      
+       
 
         public IActionResult Privacy()
         {
