@@ -1,4 +1,4 @@
-﻿@model DemoProject.Models.Employee;
+﻿@model DemoProject.Models.Employee
 @{
     ViewData["Title"] = "Home Page";
 }
@@ -11,16 +11,36 @@
     <div class="row">
         <div class="col-md-6">
             <label class="form-label">Select Start Date</label>
-            <select asp-for="StartDate" class="form-control" required asp-items="@(new SelectList(Model.EmployeeList,"Value","Text"))"></select>
+            <select asp-for="StartDate" class="form-control" required asp-items="@(new SelectList(Model.EmployeeList, "Value", "Text"))"></select>
         </div>
         <div class="col-md-6">
             <label class="form-label">Select End Date</label>
-            <select asp-for="EndDate" class="form-control" required asp-items="@(new SelectList(Model.EmployeeList2,"Value","Text"))"></select>
+            <select asp-for="EndDate" class="form-control" required asp-items="@(new SelectList(Model.EmployeeList2, "Value", "Text"))"></select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Search Employee</label>
+            <select class="form-control" asp-for="Name" id="nameDropdown">
+                <option value="">--Select Employee--</option>
+                @foreach (var item in Model.EmployeeList3)
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Search District</label>
+            <select class="form-control" asp-for="District" id="districtDropdown">
+                <option value="">--Select District--</option>
+                @foreach (var item in Model.EmployeeList4)
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            </select>
         </div>
     </div>
     <div>
         <br />
-        <input type="submit" value="Show" class="btn btn-success" />
+        <input type="submit" value="Search" class="btn btn-success" id="searchButton" />
         <input type="submit" name="action" value="Download" class="btn btn-primary" />
     </div>
 </form>
@@ -33,14 +53,15 @@
         </div>
         <table id="employeeTable" class="table table-bordered">
             <thead>
-                <tr>
-                    <th colspan="2">@ViewBag.SelectedStartDate </th>
-                    <th> @ViewBag.SelectedEndDate </th>
+                <tr style="text-align:center;">
+                    <th colspan="2">@ViewBag.SelectedStartDate</th>
+                    <th colspan="2">@ViewBag.SelectedEndDate</th>
                 </tr>
                 <tr style="background-color: #add8e6;">
                     <th scope="col">ID</th>
                     <th scope="col">Name</th>
                     <th scope="col">Joining Date</th>
+                    <th scope="col">District</th>
                 </tr>
             </thead>
             <tbody>
@@ -50,12 +71,37 @@
                         <td>@employee.Id</td>
                         <td>@employee.Name</td>
                         <td>@employee.JoiningDate.ToString("yyyy-MM-dd")</td>
+                        <td>@employee.District</td>
+
                     </tr>
                 }
             </tbody>
         </table>
     </div>
 }
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#nameDropdown, #districtDropdown').change(function () {
+                var nameValue = $('#nameDropdown').val().toLowerCase();
+                var districtValue = $('#districtDropdown').val().toLowerCase();
+                $('#employeeTable tbody tr').each(function () {
+                    var text = $(this).text().toLowerCase();
+                    var nameMatch = nameValue === '' || text.indexOf(nameValue) !== -1;
+                    var districtMatch = districtValue === '' || text.indexOf(districtValue) !== -1;
+                    if (nameMatch && districtMatch) {
+                        $(this).show();
+                    } else {
+                        $(this).hide();
+                    }
+                });
+            });
+        });
+    </script>
+}
+
 <script>
     document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("searchInput").addEventListener("keyup", function () {

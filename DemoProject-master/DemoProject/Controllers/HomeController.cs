@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using OfficeOpenXml;
 using System.Drawing;
+using PagedList;
 
 namespace DemoProject.Controllers
 {
@@ -30,7 +31,7 @@ namespace DemoProject.Controllers
             var employee = BindDropDown();
             var employee2 = BindDropDown2();
             employee.EmployeeList2 = employee2.EmployeeList2;
-           
+
             return View(employee);
         }
 
@@ -53,11 +54,22 @@ namespace DemoProject.Controllers
 
             var employee = BindDropDown();
             var employee2 = BindDropDown2();
+            var employee3 = BindDropDown3();
+            var employee4 = BindDropDown4();
             employee.EmployeeList2 = employee2.EmployeeList2;
-         
+            employee.EmployeeList3 = employee3.EmployeeList3;
+            employee.EmployeeList4 = employee4.EmployeeList4;
+
             return View(employee);
         }
 
+        //[HttpPost]
+        //public IActionResult SearchEmployee(string employeeName)
+        //{
+        //    var employeeData = _dataAccessLayer.SearchEmployeesByName(employeeName);
+        //    ViewBag.ShowSearchDropdown = true; // Ensure the search dropdown is shown after searching
+        //    return PartialView("_EmployeeListPartial", employeeData);
+        //}
 
         private IActionResult DownloadExcel(IEnumerable<Employee> employees, DateTime StartDate, DateTime EndDate)
         {
@@ -79,6 +91,7 @@ namespace DemoProject.Controllers
                     worksheet.Cells["A2"].Value = "ID";
                     worksheet.Cells["B2"].Value = "Name";
                     worksheet.Cells["C2"].Value = "Joining Date";
+                    worksheet.Cells["D2"].Value = "District";
 
                     // Apply styling to the header row
                     using (var range = worksheet.Cells["A1:D1"])
@@ -86,7 +99,7 @@ namespace DemoProject.Controllers
                         range.Style.Font.Bold = true;
                         range.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
                     }
-                    using (var range = worksheet.Cells["A2:C2"])
+                    using (var range = worksheet.Cells["A2:D2"])
                     {
                         range.Style.Font.Bold = true;
                         range.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
@@ -99,6 +112,7 @@ namespace DemoProject.Controllers
                         worksheet.Cells[row, 1].Value = employee.Id;
                         worksheet.Cells[row, 2].Value = employee.Name;
                         worksheet.Cells[row, 3].Value = employee.JoiningDate.ToString("yyyy-MM-dd");
+                        worksheet.Cells[row, 4].Value = employee.District;
                         row++;
                     }
 
@@ -158,7 +172,52 @@ namespace DemoProject.Controllers
             }
             return employee;
         }
-       
+        private Employee BindDropDown3()
+        {
+            Employee employee = new Employee();
+            employee.EmployeeList3 = new List<SelectListItem>();
+            var data = _dataAccessLayer.GetDistinctEmployeeNames();
+
+            employee.EmployeeList3.Add(new SelectListItem
+            {
+                Text = "--Select Employee--",
+                Value = ""
+            });
+
+            foreach (var name in data)
+            {
+                employee.EmployeeList3.Add(new SelectListItem
+                {
+                    Text = name,
+                    Value = name
+                });
+            }
+            return employee;
+        }
+        private Employee BindDropDown4()
+        {
+            Employee employee = new Employee();
+            employee.EmployeeList4 = new List<SelectListItem>();
+            var data = _dataAccessLayer.GetDistinctEmployeeDistrict();
+
+            employee.EmployeeList4.Add(new SelectListItem
+            {
+                Text = "--Select District--",
+                Value = ""
+            });
+
+            foreach (var name in data)
+            {
+                employee.EmployeeList4.Add(new SelectListItem
+                {
+                    Text = name,
+                    Value = name
+                });
+            }
+            return employee;
+        }
+
+
 
         public IActionResult Privacy()
         {

@@ -39,6 +39,7 @@ namespace DemoProject.Models
                                 employee.Id = Convert.ToInt32(reader["EmpId"]);
                                 employee.Name = Convert.ToString(reader["EmpName"]);
                                 employee.JoiningDate = Convert.ToDateTime(reader["EmpJoiningDate"]);
+                                employee.District = Convert.ToString(reader["EmpDistrict"]);
 
                                 lstEmployee.Add(employee);
                             }
@@ -80,6 +81,7 @@ namespace DemoProject.Models
                                 employee.Id = Convert.ToInt32(reader["EmpId"]);
                                 employee.Name = Convert.ToString(reader["EmpName"]);
                                 employee.JoiningDate = Convert.ToDateTime(reader["EmpJoiningDate"]);
+                                employee.District = Convert.ToString(reader["EmpDistrict"]);
 
                                 lstEmployee.Add(employee);
                             }
@@ -95,5 +97,68 @@ namespace DemoProject.Models
 
             return lstEmployee;
         }
+        public IEnumerable<string> GetDistinctEmployeeNames()
+        {
+            List<string> employeeNames = new List<string>();
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    string query = "SELECT DISTINCT EmpName FROM Employee";
+
+                    SqlCommand command = new SqlCommand(query, connection);
+
+                    connection.Open();
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            employeeNames.Add(Convert.ToString(reader["EmpName"]));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                // Consider logging the exception
+            }
+
+            return employeeNames;
+        }
+        public IEnumerable<string> GetDistinctEmployeeDistrict()
+        {
+            List<string> employeeDistrict = new List<string>();
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    string query = "SELECT DISTINCT EmpDistrict FROM Employee";
+
+                    SqlCommand command = new SqlCommand(query, connection);
+
+                    connection.Open();
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            employeeDistrict.Add(Convert.ToString(reader["EmpDistrict"]));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                // Consider logging the exception
+            }
+
+            return employeeDistrict;
+        }
+       
     }
 }
