@@ -21,6 +21,10 @@ namespace DemoProject.Models
         public List<SelectListItem> EmployeeList2 { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> EmployeeList3 { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> EmployeeList4 { get; set; } = new List<SelectListItem>();
+        public List<SelectListItem> EmployeeList5 { get; set; } = new List<SelectListItem>();
+        public List<SelectListItem> EmployeeList6 { get; set; } = new List<SelectListItem>();
+        public List<SelectListItem> EmployeeList7 { get; set; } = new List<SelectListItem>();
+        public List<SelectListItem> EmployeeList8 { get; set; } = new List<SelectListItem>();
 
     }
 }

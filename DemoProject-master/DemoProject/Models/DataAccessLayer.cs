@@ -172,6 +172,133 @@ namespace DemoProject.Models
 
             return employeeDistrict;
         }
-       
+
+        public IEnumerable<string> GetDistinctPU()
+        {
+            List<string> employeePU = new List<string>();
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    string query = "SELECT DISTINCT PU FROM Employee";
+
+                    SqlCommand command = new SqlCommand(query, connection);
+
+                    connection.Open();
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            employeePU.Add(Convert.ToString(reader["PU"]));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                // Consider logging the exception
+            }
+
+            return employeePU;
+        }
+
+        public IEnumerable<string> GetDistinctPuMapped()
+        {
+            List<string> employeePUMapped = new List<string>();
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    string query = "SELECT DISTINCT PUMapped FROM Employee";
+
+                    SqlCommand command = new SqlCommand(query, connection);
+
+                    connection.Open();
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            employeePUMapped.Add(Convert.ToString(reader["PUMapped"]));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                // Consider logging the exception
+            }
+
+            return employeePUMapped;
+        }
+
+        public IEnumerable<string> GetDistinctDM()
+        {
+            List<string> employeeDM = new List<string>();
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    string query = "SELECT DISTINCT DM FROM Employee";
+
+                    SqlCommand command = new SqlCommand(query, connection);
+
+                    connection.Open();
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            employeeDM.Add(Convert.ToString(reader["DM"]));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                // Consider logging the exception
+            }
+
+            return employeeDM;
+        }
+        public IEnumerable<string> GetDistinctCSG()
+        {
+            List<string> employeeCSG = new List<string>();
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    string query = "SELECT DISTINCT CSG FROM Employee";
+
+                    SqlCommand command = new SqlCommand(query, connection);
+
+                    connection.Open();
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            employeeCSG.Add(Convert.ToString(reader["CSG"]));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                // Consider logging the exception
+            }
+
+            return employeeCSG;
+        }
+
     }
 }

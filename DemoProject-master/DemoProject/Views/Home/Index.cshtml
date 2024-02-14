@@ -37,6 +37,49 @@
                 }
             </select>
         </div>
+         <div class="col-md-3">
+            <label class="form-label">Search PU</label>
+            <select class="form-control" asp-for="District" id="PUDropdown">
+                <option value="">--Select PU--</option>
+                @foreach (var item in Model.EmployeeList5)
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-3">
+            <label class="form-label">Search PU Mapped</label>
+            <select class="form-control" asp-for="District" id="PUMappedDropdown">
+                <option value="">--Select PUMapped--</option>
+                @foreach (var item in Model.EmployeeList6)
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            </select>
+        </div>
+
+        <div class="col-md-3">
+            <label class="form-label">Search DM</label>
+            <select class="form-control" asp-for="District" id="DMDropdown">
+                <option value="">--Select DM--</option>
+                @foreach (var item in Model.EmployeeList7)
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            </select>
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Search CSG</label>
+            <select class="form-control" asp-for="District" id="CSGDropdown">
+                <option value="">--Select CSG--</option>
+                @foreach (var item in Model.EmployeeList8)
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            </select>
+        </div>
     </div>
     <div>
         <br />
@@ -98,23 +141,38 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         $(document).ready(function () {
-            $('#nameDropdown, #districtDropdown').change(function () {
-                var nameValue = $('#nameDropdown').val().toLowerCase();
-                var districtValue = $('#districtDropdown').val().toLowerCase();
-                $('#employeeTable tbody tr').each(function () {
-                    var text = $(this).text().toLowerCase();
-                    var nameMatch = nameValue === '' || text.indexOf(nameValue) !== -1;
-                    var districtMatch = districtValue === '' || text.indexOf(districtValue) !== -1;
-                    if (nameMatch && districtMatch) {
-                        $(this).show();
-                    } else {
-                        $(this).hide();
-                    }
-                });
+            $('#nameDropdown, #districtDropdown, #PUDropdown, #PUMappedDropdown, #DMDropdown, #CSGDropdown').change(function () {
+                filterTable();
             });
         });
+
+        function filterTable() {
+            var nameValue = $('#nameDropdown').val().toLowerCase();
+            var districtValue = $('#districtDropdown').val().toLowerCase();
+            var puValue = $('#PUDropdown').val().toLowerCase();
+            var puMappedValue = $('#PUMappedDropdown').val().toLowerCase();
+            var dmValue = $('#DMDropdown').val().toLowerCase();
+            var csgValue = $('#CSGDropdown').val().toLowerCase();
+
+            $('#employeeTable tbody tr').each(function () {
+                var text = $(this).text().toLowerCase();
+                var nameMatch = nameValue === '' || text.indexOf(nameValue) !== -1;
+                var districtMatch = districtValue === '' || text.indexOf(districtValue) !== -1;
+                var puMatch = puValue === '' || text.indexOf(puValue) !== -1;
+                var puMappedMatch = puMappedValue === '' || text.indexOf(puMappedValue) !== -1;
+                var dmMatch = dmValue === '' || text.indexOf(dmValue) !== -1;
+                var csgMatch = csgValue === '' || text.indexOf(csgValue) !== -1;
+
+                if (nameMatch && districtMatch && puMatch && puMappedMatch && dmMatch && csgMatch) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
     </script>
 }
+
 
 <script>
     document.addEventListener("DOMContentLoaded", function () {

@@ -32,7 +32,7 @@ namespace DemoProject.Controllers
             var employee2 = BindDropDown2();
             employee.EmployeeList2 = employee2.EmployeeList2;
           
-  return View(employee);
+            return View(employee);
         }
 
         [HttpPost]
@@ -48,6 +48,12 @@ namespace DemoProject.Controllers
             if (employeeData != null)
             {
                 ViewBag.EmployeeList = employeeData;
+               
+                    foreach (var empl in ViewBag.EmployeeList)
+                    {
+                        Console.WriteLine($"ID: {empl.Id}, Name: {empl.Name}, Joining Date: {empl.JoiningDate}, District: {empl.District}, Language: {empl.Language}, PU: {empl.PU}, PUMapped: {empl.PUMapped}, DM: {empl.DM}, CSG: {empl.CSG}, CSG Head: {empl.CSGhead}");
+                    }
+                
             }
             ViewBag.SelectedStartDate = emp.StartDate;
             ViewBag.SelectedEndDate = emp.EndDate;
@@ -56,20 +62,20 @@ namespace DemoProject.Controllers
             var employee2 = BindDropDown2();
             var employee3 = BindDropDown3();
             var employee4 = BindDropDown4();
+            var employee5 = BindDropDown5();
+            var employee6 = BindDropDown6();
+            var employee7 = BindDropDown7();
+            var employee8 = BindDropDown8();
             employee.EmployeeList2 = employee2.EmployeeList2;
             employee.EmployeeList3 = employee3.EmployeeList3;
             employee.EmployeeList4 = employee4.EmployeeList4;
+            employee.EmployeeList5 = employee5.EmployeeList5;
+            employee.EmployeeList6 = employee6.EmployeeList6;
+            employee.EmployeeList7 = employee7.EmployeeList7;
+            employee.EmployeeList8 = employee8.EmployeeList8;
 
             return View(employee);
         }
-
-        //[HttpPost]
-        //public IActionResult SearchEmployee(string employeeName)
-        //{
-        //    var employeeData = _dataAccessLayer.SearchEmployeesByName(employeeName);
-        //    ViewBag.ShowSearchDropdown = true; // Ensure the search dropdown is shown after searching
-        //    return PartialView("_EmployeeListPartial", employeeData);
-        //}
 
         private IActionResult DownloadExcel(IEnumerable<Employee> employees, DateTime StartDate, DateTime EndDate)
         {
@@ -239,6 +245,97 @@ namespace DemoProject.Controllers
             return employee;
         }
 
+        private Employee BindDropDown5()
+        {
+            Employee employee = new Employee();
+            employee.EmployeeList5 = new List<SelectListItem>();
+            var data = _dataAccessLayer.GetDistinctPU();
+
+            employee.EmployeeList5.Add(new SelectListItem
+            {
+                Text = "--Select PU--",
+                Value = ""
+            });
+
+            foreach (var name in data)
+            {
+                employee.EmployeeList5.Add(new SelectListItem
+                {
+                    Text = name,
+                    Value = name
+                });
+            }
+            return employee;
+        }
+
+        private Employee BindDropDown6()
+        {
+            Employee employee = new Employee();
+            employee.EmployeeList6 = new List<SelectListItem>();
+            var data = _dataAccessLayer.GetDistinctPuMapped();
+
+            employee.EmployeeList6.Add(new SelectListItem
+            {
+                Text = "--Select PUMapped--",
+                Value = ""
+            });
+
+            foreach (var name in data)
+            {
+                employee.EmployeeList6.Add(new SelectListItem
+                {
+                    Text = name,
+                    Value = name
+                });
+            }
+            return employee;
+        }
+
+        private Employee BindDropDown7()
+        {
+            Employee employee = new Employee();
+            employee.EmployeeList7 = new List<SelectListItem>();
+            var data = _dataAccessLayer.GetDistinctDM();
+
+            employee.EmployeeList7.Add(new SelectListItem
+            {
+                Text = "--Select DM--",
+                Value = ""
+            });
+
+            foreach (var name in data)
+            {
+                employee.EmployeeList7.Add(new SelectListItem
+                {
+                    Text = name,
+                    Value = name
+                });
+            }
+            return employee;
+        }
+
+        private Employee BindDropDown8()
+        {
+            Employee employee = new Employee();
+            employee.EmployeeList8 = new List<SelectListItem>();
+            var data = _dataAccessLayer.GetDistinctCSG();
+
+            employee.EmployeeList4.Add(new SelectListItem
+            {
+                Text = "--Select CSG--",
+                Value = ""
+            });
+
+            foreach (var name in data)
+            {
+                employee.EmployeeList8.Add(new SelectListItem
+                {
+                    Text = name,
+                    Value = name
+                });
+            }
+            return employee;
+        }
 
 
         public IActionResult Privacy()
