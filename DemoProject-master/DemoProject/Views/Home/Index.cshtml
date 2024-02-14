@@ -54,14 +54,22 @@
         <table id="employeeTable" class="table table-bordered">
             <thead>
                 <tr style="text-align:center;">
+                    <th colspan="3">Customer Details</th>
                     <th colspan="2">@ViewBag.SelectedStartDate</th>
                     <th colspan="2">@ViewBag.SelectedEndDate</th>
+                    <th colspan="3">Variance</th>
                 </tr>
                 <tr style="background-color: #add8e6;">
                     <th scope="col">ID</th>
                     <th scope="col">Name</th>
                     <th scope="col">Joining Date</th>
                     <th scope="col">District</th>
+                    <th scope="col">Language</th>
+                    <th scope="col">PU</th>
+                    <th scope="col">PU Mapped</th>
+                    <th scope="col">DM</th>
+                    <th scope="col">CSG</th>
+                    <th scope="col">CSG Head</th>
                 </tr>
             </thead>
             <tbody>
@@ -72,6 +80,12 @@
                         <td>@employee.Name</td>
                         <td>@employee.JoiningDate.ToString("yyyy-MM-dd")</td>
                         <td>@employee.District</td>
+                        <td>@employee.Language</td>
+                        <td>@employee.PU</td>
+                        <td>@employee.PUMapped</td>
+                        <td>@employee.DM</td>
+                        <td>@employee.CSG</td>
+                        <td>@employee.CSGhead</td>
 
                     </tr>
                 }

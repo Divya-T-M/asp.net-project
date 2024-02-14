@@ -20,7 +20,7 @@ namespace DemoProject.Models
         public IEnumerable<Employee> GetAllEmployees()
         {
             List<Employee> lstEmployee = new List<Employee>();
-            string query = "SELECT * FROM EMPLOYEE";
+            string query = "SELECT * FROM EMPLOYEE"; 
 
             try
             {
@@ -40,6 +40,12 @@ namespace DemoProject.Models
                                 employee.Name = Convert.ToString(reader["EmpName"]);
                                 employee.JoiningDate = Convert.ToDateTime(reader["EmpJoiningDate"]);
                                 employee.District = Convert.ToString(reader["EmpDistrict"]);
+                                employee.Language = Convert.ToString(reader["Emplanguage"]); // Ensure correct case
+                                employee.PU = Convert.ToString(reader["PU"]); // Ensure correct case
+                                employee.PUMapped = Convert.ToString(reader["PUMapped"]); // Ensure correct case
+                                employee.DM = Convert.ToString(reader["DM"]); // Ensure correct case
+                                employee.CSG = Convert.ToString(reader["CSG"]); // Ensure correct case
+                                employee.CSGhead = Convert.ToString(reader["CSGhead"]); // Ensure correct case
 
                                 lstEmployee.Add(employee);
                             }
@@ -82,6 +88,13 @@ namespace DemoProject.Models
                                 employee.Name = Convert.ToString(reader["EmpName"]);
                                 employee.JoiningDate = Convert.ToDateTime(reader["EmpJoiningDate"]);
                                 employee.District = Convert.ToString(reader["EmpDistrict"]);
+                                employee.Language = Convert.ToString(reader["Emplanguage"]);
+                                employee.PU = Convert.ToString(reader["PU"]);
+                                employee.PUMapped = Convert.ToString(reader["PUMapped"]);
+                                employee.DM = Convert.ToString(reader["DM"]);
+                                employee.CSG = Convert.ToString(reader["CSG"]);
+                                employee.CSGhead = Convert.ToString(reader["CSGhead"]);
+
 
                                 lstEmployee.Add(employee);
                             }

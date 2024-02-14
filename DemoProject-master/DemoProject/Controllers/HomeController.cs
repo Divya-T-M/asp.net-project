@@ -31,8 +31,8 @@ namespace DemoProject.Controllers
             var employee = BindDropDown();
             var employee2 = BindDropDown2();
             employee.EmployeeList2 = employee2.EmployeeList2;
-
-            return View(employee);
+          
+  return View(employee);
         }
 
         [HttpPost]
@@ -79,27 +79,43 @@ namespace DemoProject.Controllers
                 {
                     var worksheet = package.Workbook.Worksheets.Add("Employees");
 
+
                     // Merge cells for the title
-                    worksheet.Cells["A1:B1"].Merge = true;
-                    worksheet.Cells[1, 1].Value = StartDate.ToString("yyyy-MM-dd");
+                    worksheet.Cells["A1:C1"].Merge = true;
+                    worksheet.Cells[1, 1].Value = "Customer Details";
                     worksheet.Cells[1, 1, 1, 2].Style.Font.Bold = true;
 
-                    worksheet.Cells["C1:D1"].Merge = true;
-                    worksheet.Cells[1, 3].Value = EndDate.ToString("yyyy-MM-dd");
+                    worksheet.Cells["D1:E1"].Merge = true;
+                    worksheet.Cells[1, 3].Value = StartDate.ToString("yyyy-MM-dd");
                     worksheet.Cells[1, 3, 1, 4].Style.Font.Bold = true;
+
+                    worksheet.Cells["F1:G1"].Merge = true;
+                    worksheet.Cells[1, 5].Value = EndDate.ToString("yyyy-MM-dd"); 
+                    worksheet.Cells[1, 5, 1, 6].Style.Font.Bold = true; 
+
+                    worksheet.Cells["H1:J1"].Merge = true;
+                    worksheet.Cells[1, 7].Value = "Variance";  
+                    worksheet.Cells[1, 7, 1, 9].Style.Font.Bold = true;
+
                     // Add column headers
                     worksheet.Cells["A2"].Value = "ID";
                     worksheet.Cells["B2"].Value = "Name";
                     worksheet.Cells["C2"].Value = "Joining Date";
                     worksheet.Cells["D2"].Value = "District";
+                    worksheet.Cells["E2"].Value = "Language";
+                    worksheet.Cells["F2"].Value = "PU";
+                    worksheet.Cells["G2"].Value = "PU Mapped";
+                    worksheet.Cells["H2"].Value = "DM";
+                    worksheet.Cells["I2"].Value = "CSG";
+                    worksheet.Cells["J2"].Value = "CSG Head";
 
                     // Apply styling to the header row
-                    using (var range = worksheet.Cells["A1:D1"])
+                    using (var range = worksheet.Cells["A1:J1"])
                     {
                         range.Style.Font.Bold = true;
                         range.Style.HorizontalAlignment = OfficeOpenXml.Style.ExcelHorizontalAlignment.Center;
                     }
-                    using (var range = worksheet.Cells["A2:D2"])
+                    using (var range = worksheet.Cells["A2:J2"])
                     {
                         range.Style.Font.Bold = true;
                         range.Style.Fill.PatternType = OfficeOpenXml.Style.ExcelFillStyle.Solid;
@@ -113,6 +129,12 @@ namespace DemoProject.Controllers
                         worksheet.Cells[row, 2].Value = employee.Name;
                         worksheet.Cells[row, 3].Value = employee.JoiningDate.ToString("yyyy-MM-dd");
                         worksheet.Cells[row, 4].Value = employee.District;
+                        worksheet.Cells[row, 5].Value = employee.Language;
+                        worksheet.Cells[row, 6].Value = employee.PU;
+                        worksheet.Cells[row, 7].Value = employee.PUMapped;
+                        worksheet.Cells[row, 8].Value = employee.DM;
+                        worksheet.Cells[row, 9].Value = employee.CSG;
+                        worksheet.Cells[row, 10].Value = employee.CSGhead;
                         row++;
                     }
 
