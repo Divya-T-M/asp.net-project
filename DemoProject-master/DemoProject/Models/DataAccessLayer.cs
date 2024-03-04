@@ -40,12 +40,14 @@ namespace DemoProject.Models
                                 employee.Name = Convert.ToString(reader["EmpName"]);
                                 employee.JoiningDate = Convert.ToDateTime(reader["EmpJoiningDate"]);
                                 employee.District = Convert.ToString(reader["EmpDistrict"]);
-                                employee.Language = Convert.ToString(reader["Emplanguage"]); // Ensure correct case
+                                employee.CSGhead = Convert.ToString(reader["CSGhead"]);
                                 employee.PU = Convert.ToString(reader["PU"]); // Ensure correct case
                                 employee.PUMapped = Convert.ToString(reader["PUMapped"]); // Ensure correct case
                                 employee.DM = Convert.ToString(reader["DM"]); // Ensure correct case
                                 employee.CSG = Convert.ToString(reader["CSG"]); // Ensure correct case
-                                employee.CSGhead = Convert.ToString(reader["CSGhead"]); // Ensure correct case
+                                employee.State = Convert.ToString(reader["State"]); // Ensure correct case
+                                //employee.RevVar = Convert.ToDouble(reader["RevVar"]);
+                                //employee.VolVar = Convert.ToDouble(reader["VolVar"]);
 
                                 lstEmployee.Add(employee);
                             }
@@ -94,6 +96,9 @@ namespace DemoProject.Models
                                 employee.DM = Convert.ToString(reader["DM"]);
                                 employee.CSG = Convert.ToString(reader["CSG"]);
                                 employee.CSGhead = Convert.ToString(reader["CSGhead"]);
+                                employee.State = Convert.ToString(reader["State"]);
+                                employee.RevVar = Convert.ToDouble(reader["RevVar"]);
+                                employee.VolVar = Convert.ToDouble(reader["VolVar"]);
 
 
                                 lstEmployee.Add(employee);
@@ -110,17 +115,19 @@ namespace DemoProject.Models
 
             return lstEmployee;
         }
-        public IEnumerable<string> GetDistinctEmployeeNames()
-        {
-            List<string> employeeNames = new List<string>();
 
+
+        public IEnumerable<GraphData> GetGraphDataForChart(DateTime startDate, DateTime endDate)
+        {
+            List<GraphData> graphData = new List<GraphData>();
             try
             {
                 using (SqlConnection connection = new SqlConnection(_connectionString))
+                using (SqlCommand command = new SqlCommand("sp_employee_2", connection))
                 {
-                    string query = "SELECT DISTINCT EmpName FROM Employee";
-
-                    SqlCommand command = new SqlCommand(query, connection);
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@StartDate", startDate);
+                    command.Parameters.AddWithValue("@EndDate", endDate);
 
                     connection.Open();
 
@@ -128,7 +135,11 @@ namespace DemoProject.Models
                     {
                         while (reader.Read())
                         {
-                            employeeNames.Add(Convert.ToString(reader["EmpName"]));
+                            GraphData data = new GraphData();
+                            data.Date = reader.GetDateTime(reader.GetOrdinal("EmpJoiningDate")).ToString("yyyy-MM-dd");
+                            data.RevVar = reader.GetDouble(reader.GetOrdinal("RevVar"));
+                            data.VolVar = reader.GetDouble(reader.GetOrdinal("VolVar"));
+                            graphData.Add(data);
                         }
                     }
                 }
@@ -136,169 +147,11 @@ namespace DemoProject.Models
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                // Consider logging the exception
             }
-
-            return employeeNames;
-        }
-        public IEnumerable<string> GetDistinctEmployeeDistrict()
-        {
-            List<string> employeeDistrict = new List<string>();
-
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(_connectionString))
-                {
-                    string query = "SELECT DISTINCT EmpDistrict FROM Employee";
-
-                    SqlCommand command = new SqlCommand(query, connection);
-
-                    connection.Open();
-
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            employeeDistrict.Add(Convert.ToString(reader["EmpDistrict"]));
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                // Consider logging the exception
-            }
-
-            return employeeDistrict;
+            return graphData;
         }
 
-        public IEnumerable<string> GetDistinctPU()
-        {
-            List<string> employeePU = new List<string>();
 
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(_connectionString))
-                {
-                    string query = "SELECT DISTINCT PU FROM Employee";
-
-                    SqlCommand command = new SqlCommand(query, connection);
-
-                    connection.Open();
-
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            employeePU.Add(Convert.ToString(reader["PU"]));
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                // Consider logging the exception
-            }
-
-            return employeePU;
-        }
-
-        public IEnumerable<string> GetDistinctPuMapped()
-        {
-            List<string> employeePUMapped = new List<string>();
-
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(_connectionString))
-                {
-                    string query = "SELECT DISTINCT PUMapped FROM Employee";
-
-                    SqlCommand command = new SqlCommand(query, connection);
-
-                    connection.Open();
-
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            employeePUMapped.Add(Convert.ToString(reader["PUMapped"]));
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                // Consider logging the exception
-            }
-
-            return employeePUMapped;
-        }
-
-        public IEnumerable<string> GetDistinctDM()
-        {
-            List<string> employeeDM = new List<string>();
-
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(_connectionString))
-                {
-                    string query = "SELECT DISTINCT DM FROM Employee";
-
-                    SqlCommand command = new SqlCommand(query, connection);
-
-                    connection.Open();
-
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            employeeDM.Add(Convert.ToString(reader["DM"]));
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                // Consider logging the exception
-            }
-
-            return employeeDM;
-        }
-        public IEnumerable<string> GetDistinctCSG()
-        {
-            List<string> employeeCSG = new List<string>();
-
-            try
-            {
-                using (SqlConnection connection = new SqlConnection(_connectionString))
-                {
-                    string query = "SELECT DISTINCT CSG FROM Employee";
-
-                    SqlCommand command = new SqlCommand(query, connection);
-
-                    connection.Open();
-
-                    using (SqlDataReader reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                        {
-                            employeeCSG.Add(Convert.ToString(reader["CSG"]));
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-                // Consider logging the exception
-            }
-
-            return employeeCSG;
-        }
 
     }
 }

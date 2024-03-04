@@ -13,7 +13,10 @@ namespace DemoProject.Models
         public string DM { get; set; } = string.Empty;
         public string CSG { get; set; } = string.Empty;
         public string CSGhead { get; set; } = string.Empty;
-       
+        public string State { get; set; } = string.Empty;
+        public double RevVar { get; set; }
+        public double VolVar { get; set; }
+
         public DateTime JoiningDate { get; set; }
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
@@ -25,6 +28,8 @@ namespace DemoProject.Models
         public List<SelectListItem> EmployeeList6 { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> EmployeeList7 { get; set; } = new List<SelectListItem>();
         public List<SelectListItem> EmployeeList8 { get; set; } = new List<SelectListItem>();
+        public List<SelectListItem> EmployeeList9 { get; set; } = new List<SelectListItem>();
+        public List<SelectListItem> EmployeeList10 { get; set; } = new List<SelectListItem>();
 
     }
 }
