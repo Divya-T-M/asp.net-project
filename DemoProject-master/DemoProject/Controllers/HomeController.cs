@@ -128,6 +128,24 @@ namespace DemoProject.Controllers
             ViewBag.SelectedStartDate = emp.StartDate;
             ViewBag.SelectedEndDate = emp.EndDate;
 
+            if (!string.IsNullOrEmpty(emp.State))
+            {
+                var districts = _dataAccessLayer.GetDistrictsByState(emp.State);
+                var districtListItems = districts.Select(d => new SelectListItem { Text = d, Value = d }).ToList();
+                districtListItems.Insert(0, new SelectListItem { Text = "--Select District--", Value = "" });
+
+                employee.EmployeeList4 = districtListItems;
+            }
+            if (!string.IsNullOrEmpty(emp.CSGhead))
+            {
+                var CSG = _dataAccessLayer.GetCSGbyCSGhead(emp.CSGhead);
+                var CSGListItems = CSG.Select(d => new SelectListItem { Text = d, Value = d }).ToList();
+                CSGListItems.Insert(0, new SelectListItem { Text = "--Select CSG--", Value = "" });
+
+                employee.EmployeeList8 = CSGListItems;
+            }
+
+
             return View(employee);
         }
 

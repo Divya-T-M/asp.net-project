@@ -116,6 +116,68 @@ namespace DemoProject.Models
             return lstEmployee;
         }
 
+        public List<string> GetDistrictsByState(string state)
+        {
+            List<string> districts = new List<string>();
+            string query = "SELECT DISTINCT EmpDistrict FROM Employee WHERE State = @State";
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@State", state);
+                    connection.Open();
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            string district = Convert.ToString(reader["EmpDistrict"]);
+                            districts.Add(district);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return districts;
+        }
+
+        public List<string> GetCSGbyCSGhead(string CSGhead)
+        {
+            List<string> CSGs = new List<string>();
+            string query = "SELECT DISTINCT CSG FROM Employee WHERE CSGhead = @CSGhead";
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@CSGhead", CSGhead);
+                    connection.Open();
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            string CSG = Convert.ToString(reader["CSG"]);
+                            CSGs.Add(CSG);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return CSGs;
+        }
+
+
 
         public IEnumerable<GraphData> GetGraphDataForChart(DateTime startDate, DateTime endDate)
         {
