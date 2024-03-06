@@ -248,32 +248,25 @@
 
             $('.searchable-dropdown').select2();
 
-            $('#State').change(function () {
-                var selectedState = $(this).val();
-                $.get('@Url.Action("GetDistrictsByState", "Home")', { state: selectedState }, function (data) {
-                    $('#District').empty();
-                    $.each(data, function (index, item) {
-                        $('#District').append($('<option>', {
-                            value: item.value,
-                            text: item.text
-                        }));
-                    });
-                    $('#District').trigger('change'); // Trigger change event after updating options
-                });
-            });
-
-            // Function to fetch CSGs based on selected CSG Head
-            $('#CSGHead').change(function () {
+            $('#CSGheadDropdown').change(function () {
                 var selectedCSGHead = $(this).val();
-                $.get('@Url.Action("GetCSGbyCSGhead", "Home")', { csgHead: selectedCSGHead }, function (data) {
-                    $('#CSG').empty();
-                    $.each(data, function (index, item) {
-                        $('#CSG').append($('<option>', {
-                            value: item.value,
-                            text: item.text
-                        }));
-                    });
-                    $('#CSG').trigger('change'); // Trigger change event after updating options
+                $.ajax({
+                    url: '@Url.Action("GetCSGbyCSGhead", "Home")',
+                    type: 'GET',
+                    data: { csgHead: selectedCSGHead },
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#CSGDropdown').empty();
+                        $.each(data, function (index, item) {
+                            $('#CSGDropdown').append($('<option>', {
+                                value: item.value,
+                                text: item.text
+                            }));
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error);
+                    }
                 });
             });
         });
