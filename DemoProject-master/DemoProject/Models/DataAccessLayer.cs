@@ -177,6 +177,48 @@ namespace DemoProject.Models
             return CSGs;
         }
 
+        //public List<string> GetItemsByCriteria(string criteria, string value)
+        //{
+        //    List<string> items = new List<string>();
+        //    string query = "";
+
+        //    switch (criteria)
+        //    {
+        //        case "State":
+        //            query = "SELECT DISTINCT EmpDistrict FROM Employee WHERE State = @Value";
+        //            break;
+        //        case "CSGhead":
+        //            query = "SELECT DISTINCT CSG FROM Employee WHERE CSGhead = @Value";
+        //            break;
+        //        default:
+        //            throw new ArgumentException("Invalid criteria provided.");
+        //    }
+
+        //    try
+        //    {
+        //        using (SqlConnection connection = new SqlConnection(_connectionString))
+        //        using (SqlCommand command = new SqlCommand(query, connection))
+        //        {
+        //            command.Parameters.AddWithValue("@Value", value);
+        //            connection.Open();
+
+        //            using (SqlDataReader reader = command.ExecuteReader())
+        //            {
+        //                while (reader.Read())
+        //                {
+        //                    string item = Convert.ToString(reader[criteria == "State" ? "EmpDistrict" : "CSG"]);
+        //                    items.Add(item);
+        //                }
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        Console.WriteLine(ex.Message);
+        //    }
+
+        //    return items;
+        //}
 
 
         public IEnumerable<GraphData> GetGraphDataForChart(DateTime startDate, DateTime endDate)

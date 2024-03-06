@@ -26,7 +26,7 @@ namespace DemoProject.Controllers
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int pg =1)
         {
             var employee = BindDropDown();
             var employee2 = BindDropDown2();
@@ -47,6 +47,18 @@ namespace DemoProject.Controllers
             employee.EmployeeList8 = employee8.EmployeeList8;
             employee.EmployeeList9 = employee9.EmployeeList9;
             employee.EmployeeList10 = employee10.EmployeeList10;
+
+            var employees = _dataAccessLayer.GetAllEmployees().ToList();
+            const int pageSize = 10;
+            if (pg < 1)
+            {
+                pg = 1;
+            }
+            int recsCount = employees.Count();
+            var pager = new Pager(recsCount, pg, pageSize);
+            int recSkip = (pg - 1) * pageSize;
+            var data = employees.Skip(recSkip).Take(pager.PageSize).ToList();
+            this.ViewBag.pager = pager;
 
 
             return View(employee);
@@ -186,6 +198,26 @@ namespace DemoProject.Controllers
             return employeeData.ToList();
         }
 
+        // Controller Action Methods
+        [HttpGet]
+        public IActionResult GetDistrictsByState(Employee emp)
+        {
+            var districts = _dataAccessLayer.GetDistrictsByState(emp.State);
+            var districtListItems = districts.Select(d => new SelectListItem { Text = d, Value = d }).ToList();
+            districtListItems.Insert(0, new SelectListItem { Text = "--Select District--", Value = "" });
+
+            return Json(districtListItems);
+        }
+
+        [HttpGet]
+        public IActionResult GetCSGbyCSGhead(Employee emp)
+        {
+            var CSG = _dataAccessLayer.GetCSGbyCSGhead(emp.CSGhead);
+            var CSGListItems = CSG.Select(d => new SelectListItem { Text = d, Value = d }).ToList();
+            CSGListItems.Insert(0, new SelectListItem { Text = "--Select CSG--", Value = "" });
+
+            return Json(CSGListItems);
+        }
 
         public IActionResult Graph()
         {

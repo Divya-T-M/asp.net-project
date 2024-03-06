@@ -1,7 +1,17 @@
 ﻿@model DemoProject.Models.Employee;
 @{
     ViewData["Title"] = "Home Page";
+    Pager pager = new Pager();
+    int pageNo = 0;
+    if (ViewBag.Pager != null)
+    {
+        pager = ViewBag.Pager;
+        pageNo = pager.CurrentPage;
     }
+}
+@{
+    var employeeData = ViewData["EmployeeList"] as List<Employee>;
+}
    
 <div class="text-center">
     <h1 class="display-4">Welcome</h1>
@@ -191,6 +201,30 @@
             </tbody>
         </table>
     </div>
+     <div class="container">
+        @if (pager.TotalPages >0)
+    {
+        <ul class="pagination justify-content-end">
+            @for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
+            {
+                <li class="page-item @(pge == pager.CurrentPage?"active":"")">
+                    <a class="page-link" asp-controller="Employee" asp-action="Index" asp-route-pg="@pge">@pge</a>
+                </li>
+            }
+            @if (pager.CurrentPage < pager.TotalPages)
+            {
+                <li class="page-item @(pager.CurrentPage +1 ==pager.CurrentPage ? "active":"")">
+                    <a class="page-link" asp-controller="Employee" asp-action="Index" asp-route-pg="@(pager.CurrentPage +1)">Next</a>
+                </li>
+                <li class="page-item @(pager.CurrentPage == pager.CurrentPage ? "active":"")">
+                    <a class="page-link" asp-controller="Employee" asp-action="Index" asp-route-pg="@(pager.TotalPages)">Last</a>
+                </li>
+            }
+
+        </ul>
+    }
+</div>
+<partial name="_pager" model="@pager" />
 
     }
    
@@ -207,17 +241,45 @@
                 var endDate = $('#EndDate').val();
 
                 if (startDate === endDate) {
-                    alert('Please select different enddate.');
+                    alert('Please select different end date.');
                     $('#EndDate').val('');
                 }
             });
 
             $('.searchable-dropdown').select2();
+
+            $('#State').change(function () {
+                var selectedState = $(this).val();
+                $.get('@Url.Action("GetDistrictsByState", "Home")', { state: selectedState }, function (data) {
+                    $('#District').empty();
+                    $.each(data, function (index, item) {
+                        $('#District').append($('<option>', {
+                            value: item.value,
+                            text: item.text
+                        }));
+                    });
+                    $('#District').trigger('change'); // Trigger change event after updating options
+                });
+            });
+
+            // Function to fetch CSGs based on selected CSG Head
+            $('#CSGHead').change(function () {
+                var selectedCSGHead = $(this).val();
+                $.get('@Url.Action("GetCSGbyCSGhead", "Home")', { csgHead: selectedCSGHead }, function (data) {
+                    $('#CSG').empty();
+                    $.each(data, function (index, item) {
+                        $('#CSG').append($('<option>', {
+                            value: item.value,
+                            text: item.text
+                        }));
+                    });
+                    $('#CSG').trigger('change'); // Trigger change event after updating options
+                });
+            });
         });
     </script>
 }
 
-   
 @* @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
