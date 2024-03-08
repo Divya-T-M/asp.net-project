@@ -248,7 +248,15 @@
 
             $('.searchable-dropdown').select2();
 
-            $('#CSGheadDropdown').change(function () {
+                 $('#CSGDropdown').append($('<option>', {
+                                value: item.value,
+                                text: item.text
+                            }));
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error);
+                    }  $('#CSGheadDropdown').change(function () {
                 var selectedCSGHead = $(this).val();
                 $.ajax({
                     url: '@Url.Action("GetCSGbyCSGhead", "Home")',
