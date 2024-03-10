@@ -1,16 +1,7 @@
 ﻿@model DemoProject.Models.Employee;
 @{
     ViewData["Title"] = "Home Page";
-    Pager pager = new Pager();
-    int pageNo = 0;
-    if (ViewBag.Pager != null)
-    {
-        pager = ViewBag.Pager;
-        pageNo = pager.CurrentPage;
-    }
-}
-@{
-    var employeeData = ViewData["EmployeeList"] as List<Employee>;
+   
 }
    
 <div class="text-center">
@@ -127,10 +118,10 @@
 
 @if (ViewBag.EmployeeList != null && ViewBag.EmployeeList.Count > 0)
 {
-    <div class="table-responsive" style="margin-top:11px;">
-        <div>
+   @*  <div class="table-responsive" style="margin-top:11px;"> *@
+       @*  <div>
             <input type="text" id="searchInput" class="form-control" placeholder="Search...">
-        </div>
+        </div> *@
         <table id="employeeTable" class="table table-bordered">
             <thead>
                 <tr style="text-align:center;">
@@ -141,12 +132,13 @@
                     <th colspan="2">Variance</th>
                 </tr>
                 <tr style="background-color: #add8e6;">
-                    <th scope="col">ID</th>
-                    <th scope="col">Name</th>
-                    <th scope="col">Joining Date</th>
+                    
+                    <th scope="col">ID</th>  
                     <th scope="col">State</th>
                     <th scope="col">District</th>
                     <th scope="col">Language</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Joining Date</th>
                     <th scope="col">PU</th>
                     <th scope="col">PU Mapped</th>
                     <th scope="col">DM</th>
@@ -172,11 +164,11 @@
                 {
                     <tr>
                         <td>@employee.Id</td>
+                        <td>@employee.State </td>           
+                        <td>@employee.District </td>    
+                        <td>@employee.Language</td>
                         <td>@employee.Name</td>
                         <td>@employee.JoiningDate.ToString("yyyy-MM-dd")</td>
-                        <td>@employee.State</td>
-                        <td>@employee.District</td>
-                        <td>@employee.Language</td>
                         <td>@employee.PU</td>
                         <td>@employee.PUMapped</td>
                         <td>@employee.DM</td>
@@ -195,43 +187,18 @@
                             <td>@employee.RevVar</td>
                             <td>@employee.VolVar</td>
                         }
-
+                        ]
                     </tr>
                 }
             </tbody>
         </table>
-    </div>
-     <div class="container">
-        @if (pager.TotalPages >0)
-    {
-        <ul class="pagination justify-content-end">
-            @for (var pge = pager.StartPage; pge <= pager.EndPage; pge++)
-            {
-                <li class="page-item @(pge == pager.CurrentPage?"active":"")">
-                    <a class="page-link" asp-controller="Employee" asp-action="Index" asp-route-pg="@pge">@pge</a>
-                </li>
-            }
-            @if (pager.CurrentPage < pager.TotalPages)
-            {
-                <li class="page-item @(pager.CurrentPage +1 ==pager.CurrentPage ? "active":"")">
-                    <a class="page-link" asp-controller="Employee" asp-action="Index" asp-route-pg="@(pager.CurrentPage +1)">Next</a>
-                </li>
-                <li class="page-item @(pager.CurrentPage == pager.CurrentPage ? "active":"")">
-                    <a class="page-link" asp-controller="Employee" asp-action="Index" asp-route-pg="@(pager.TotalPages)">Last</a>
-                </li>
-            }
-
-        </ul>
+   @*  </div> *@
     }
-</div>
-<partial name="_pager" model="@pager" />
+  
 
-    }
-   
-
-@section Scripts {
+ @section Scripts {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    @* <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> *@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
 
     <script>
@@ -248,7 +215,57 @@
 
             $('.searchable-dropdown').select2();
 
-                 $('#CSGDropdown').append($('<option>', {
+            var table = $('#employeeTable').DataTable({
+                "columns": [
+                    {
+                        "className": 'details'
+                    },
+                    { "data": "State" },
+                    { "data": "District" },
+                    { "data": "Language" }
+                ],
+                "order": [[1, 'asc']]
+            });
+
+            $('#employeeTable tbody').on('click', 'td.details', function () {
+                var tr = $(this).closest('tr');
+                var row = table.row(tr);
+
+                if (row.child.isShown()) {
+                    row.child.hide();
+                    tr.removeClass('shown');
+                }
+                else {
+                    row.child(format(row.data())).show();
+                    tr.addClass('shown');
+                }
+            });
+
+            // $('th, td').not(':nth-child(1), :nth-child(2), :nth-child(12), :nth-child(13)').hide();
+
+            // $('td:nth-child(2)').click(function () {
+            //     $('th:nth-child(3), td:nth-child(3)').toggle();
+            // });
+
+            // $('td:nth-child(3)').click(function () {
+            //     $('th:nth-child(4), td:nth-child(4), th:nth-child(5), td:nth-child(5), th:nth-child(6), td:nth-child(6), th:nth-child(7), td:nth-child(7), th:nth-child(8), td:nth-child(8), th:nth-child(9), td:nth-child(9), th:nth-child(10), td:nth-child(10), th:nth-child(11), td:nth-child(11)').toggle();
+            // });
+           
+                
+
+                   
+
+            $('#StateDropdown').change(function () {
+                var selectedState = $(this).val();
+                $.ajax({
+                    url: '@Url.Action("GetDistrictsByState", "Home")',
+                    type: 'GET',
+                    data: { state: selectedState },
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#districtDropdown').empty();
+                        $.each(data, function (index, item) {
+                            $('#districtDropdown').append($('<option>', {
                                 value: item.value,
                                 text: item.text
                             }));
@@ -256,7 +273,11 @@
                     },
                     error: function (xhr, status, error) {
                         console.log(error);
-                    }  $('#CSGheadDropdown').change(function () {
+                    }
+                });
+            });
+
+            $('#CSGheadDropdown').change(function () {
                 var selectedCSGHead = $(this).val();
                 $.ajax({
                     url: '@Url.Action("GetCSGbyCSGhead", "Home")',
@@ -277,7 +298,30 @@
                     }
                 });
             });
+
+            $('#PUDropdown').change(function () {
+                var selectedPU = $(this).val();
+                $.ajax({
+                    url: '@Url.Action("GetPUMappedbyPU", "Home")',
+                    type: 'GET',
+                    data: { PU: selectedPU },
+                    dataType: 'json',
+                    success: function (data) {
+                        $('#PUMappedDropdown').empty();
+                        $.each(data, function (index, item) {
+                            $('#PUMappedDropdown').append($('<option>', {
+                                value: item.value,
+                                text: item.text
+                            }));
+                        });
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(error);
+                    }
+                });
+            });
         });
+      
     </script>
 }
 
@@ -323,11 +367,11 @@
             });
         }
     </script>
-} *@
+}  *@
 
 
 
-<script>
+@* <script>
     document.addEventListener("DOMContentLoaded", function () {
         document.getElementById("searchInput").addEventListener("keyup", function () {
             var searchValue = this.value.toLowerCase();
@@ -348,6 +392,6 @@
             });
         });
     });
-</script>
+</script>  *@
 
 
