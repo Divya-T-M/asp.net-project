@@ -20,7 +20,7 @@ namespace DemoProject.Models
         public IEnumerable<Employee> GetAllEmployees()
         {
             List<Employee> lstEmployee = new List<Employee>();
-            string query = "SELECT * FROM EMPLOYEE"; 
+            string query = "SELECT * FROM EMPLOYEE";
 
             try
             {
@@ -115,6 +115,83 @@ namespace DemoProject.Models
 
             return lstEmployee;
         }
+        public IEnumerable<string> GetJoiningDate()
+        {
+            List<string> JoiningDate = new List<string>();
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    string query = "SELECT DISTINCT EmpJoiningDate FROM Employee";
+                    SqlCommand command = new SqlCommand(query, connection);
+                    connection.Open();
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            JoiningDate.Add(Convert.ToString(reader["EmpJoiningDate"]));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return JoiningDate;
+        }
+
+        public IEnumerable<string> GetCSGhead()
+        {
+            List<string> CSGhead = new List<string>();
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    string query = "SELECT DISTINCT CSGhead FROM Employee";
+                    SqlCommand command = new SqlCommand(query, connection);
+                    connection.Open();
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            CSGhead.Add(Convert.ToString(reader["CSGhead"]));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return CSGhead;
+        }
+
+        public IEnumerable<string> GetCSG()
+        {
+            List<string> CSG = new List<string>();
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                {
+                    string query = "SELECT DISTINCT CSG FROM Employee";
+                    SqlCommand command = new SqlCommand(query, connection);
+                    connection.Open();
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            CSG.Add(Convert.ToString(reader["CSG"]));
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return CSG;
+        }
 
         public List<string> GetDistrictsByState(string state)
         {
@@ -177,6 +254,36 @@ namespace DemoProject.Models
             return CSGs;
         }
 
+        public List<string> GetPUMappedbyPU(string PU)
+        {
+            List<string> PUmapped = new List<string>();
+            string query = "SELECT DISTINCT PUMapped FROM Employee WHERE PU = @PU";
+
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                using (SqlCommand command = new SqlCommand(query, connection))
+                {
+                    command.Parameters.AddWithValue("@PU", PU);
+                    connection.Open();
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            string PUMapped = Convert.ToString(reader["PU"]);
+                            PUmapped.Add(PUMapped);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return PUmapped;
+        }
+
         //public List<string> GetItemsByCriteria(string criteria, string value)
         //{
         //    List<string> items = new List<string>();
@@ -221,17 +328,19 @@ namespace DemoProject.Models
         //}
 
 
-        public IEnumerable<GraphData> GetGraphDataForChart(DateTime startDate, DateTime endDate)
+        public IEnumerable<GraphData> GetGraphDataForChart(List<DateTime> selectedDates)
         {
             List<GraphData> graphData = new List<GraphData>();
             try
             {
                 using (SqlConnection connection = new SqlConnection(_connectionString))
-                using (SqlCommand command = new SqlCommand("sp_employee_2", connection))
+                using (SqlCommand command = new SqlCommand("sp_employee_4", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
-                    command.Parameters.AddWithValue("@StartDate", startDate);
-                    command.Parameters.AddWithValue("@EndDate", endDate);
+                    command.Parameters.AddWithValue("@DateA", selectedDates.Count > 0 ? selectedDates[0] : DateTime.MinValue);
+                    command.Parameters.AddWithValue("@DateB", selectedDates.Count > 1 ? selectedDates[1] : DateTime.MinValue);
+                    command.Parameters.AddWithValue("@DateC", selectedDates.Count > 2 ? selectedDates[2] : DateTime.MinValue);
+                    command.Parameters.AddWithValue("@DateD", selectedDates.Count > 3 ? selectedDates[3] : DateTime.MinValue);
 
                     connection.Open();
 

@@ -7,7 +7,6 @@ using System.Diagnostics;
 using System.IO;
 using OfficeOpenXml;
 using System.Drawing;
-using PagedList;
 
 namespace DemoProject.Controllers
 {
@@ -26,7 +25,7 @@ namespace DemoProject.Controllers
             ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
         }
 
-        public IActionResult Index(int pg =1)
+        public IActionResult Index()
         {
             var employee = BindDropDown();
             var employee2 = BindDropDown2();
@@ -38,6 +37,7 @@ namespace DemoProject.Controllers
             var employee8 = BindDropDown8();
             var employee9 = BindDropDown9();
             var employee10 = BindDropDown10();
+            var employee11 = BindDropDown11();
             employee.EmployeeList2 = employee2.EmployeeList2;
             employee.EmployeeList3 = employee3.EmployeeList3;
             employee.EmployeeList4 = employee4.EmployeeList4;
@@ -47,18 +47,7 @@ namespace DemoProject.Controllers
             employee.EmployeeList8 = employee8.EmployeeList8;
             employee.EmployeeList9 = employee9.EmployeeList9;
             employee.EmployeeList10 = employee10.EmployeeList10;
-
-            var employees = _dataAccessLayer.GetAllEmployees().ToList();
-            const int pageSize = 10;
-            if (pg < 1)
-            {
-                pg = 1;
-            }
-            int recsCount = employees.Count();
-            var pager = new Pager(recsCount, pg, pageSize);
-            int recSkip = (pg - 1) * pageSize;
-            var data = employees.Skip(recSkip).Take(pager.PageSize).ToList();
-            this.ViewBag.pager = pager;
+            employee.EmployeeList11 = employee11.EmployeeList11;
 
 
             return View(employee);
@@ -80,6 +69,7 @@ namespace DemoProject.Controllers
             var employee8 = BindDropDown8();
             var employee9 = BindDropDown9();
             var employee10 = BindDropDown10();
+            var employee11 = BindDropDown11();
 
             employee.EmployeeList2 = employee2.EmployeeList2;
             employee.EmployeeList3 = employee3.EmployeeList3;
@@ -90,6 +80,7 @@ namespace DemoProject.Controllers
             employee.EmployeeList8 = employee8.EmployeeList8;
             employee.EmployeeList9 = employee9.EmployeeList9;
             employee.EmployeeList10 = employee10.EmployeeList10;
+            employee.EmployeeList11 = employee11.EmployeeList11;
 
             var employeeData = _dataAccessLayer.GetEmployees(emp.StartDate, emp.EndDate);
 
@@ -97,7 +88,38 @@ namespace DemoProject.Controllers
             {
                 if (employeeData != null)
                 {
-                    employeeData = FilterEmployeeData(emp, employeeData);
+                    if (!string.IsNullOrEmpty(emp.Name))
+                    {
+                        employeeData = employeeData.Where(e => e.Name == emp.Name).ToList();
+                    }
+                    if (!string.IsNullOrEmpty(emp.District))
+                    {
+                        employeeData = employeeData.Where(e => e.District == emp.District).ToList();
+                    }
+                    if (!string.IsNullOrEmpty(emp.PU))
+                    {
+                        employeeData = employeeData.Where(e => e.PU == emp.PU).ToList();
+                    }
+                    if (!string.IsNullOrEmpty(emp.State))
+                    {
+                        employeeData = employeeData.Where(e => e.CSGhead == emp.State).ToList();
+                    }
+                    if (!string.IsNullOrEmpty(emp.PUMapped))
+                    {
+                        employeeData = employeeData.Where(e => e.PUMapped == emp.PUMapped).ToList();
+                    }
+                    if (!string.IsNullOrEmpty(emp.DM))
+                    {
+                        employeeData = employeeData.Where(e => e.DM == emp.DM).ToList();
+                    }
+                    if (!string.IsNullOrEmpty(emp.CSG))
+                    {
+                        employeeData = employeeData.Where(e => e.CSG == emp.CSG).ToList();
+                    }
+                    if (!string.IsNullOrEmpty(emp.Language))
+                    {
+                        employeeData = employeeData.Where(e => e.Language == emp.Language).ToList();
+                    }
                 }
 
                 return DownloadExcel(employeeData, emp.StartDate, emp.EndDate);
@@ -106,7 +128,38 @@ namespace DemoProject.Controllers
             {
                 if (employeeData != null)
                 {
-                    employeeData = FilterEmployeeData(emp, employeeData);
+                    if (!string.IsNullOrEmpty(emp.Name))
+                    {
+                        employeeData = employeeData.Where(e => e.Name == emp.Name).ToList();
+                    }
+                    if (!string.IsNullOrEmpty(emp.District))
+                    {
+                        employeeData = employeeData.Where(e => e.District == emp.District).ToList();
+                    }
+                    if (!string.IsNullOrEmpty(emp.PU))
+                    {
+                        employeeData = employeeData.Where(e => e.PU == emp.PU).ToList();
+                    }
+                    if (!string.IsNullOrEmpty(emp.State))
+                    {
+                        employeeData = employeeData.Where(e => e.CSGhead == emp.State).ToList();
+                    }
+                    if (!string.IsNullOrEmpty(emp.PUMapped))
+                    {
+                        employeeData = employeeData.Where(e => e.PUMapped == emp.PUMapped).ToList();
+                    }
+                    if (!string.IsNullOrEmpty(emp.DM))
+                    {
+                        employeeData = employeeData.Where(e => e.DM == emp.DM).ToList();
+                    }
+                    if (!string.IsNullOrEmpty(emp.CSG))
+                    {
+                        employeeData = employeeData.Where(e => e.CSG == emp.CSG).ToList();
+                    }
+                    if (!string.IsNullOrEmpty(emp.Language))
+                    {
+                        employeeData = employeeData.Where(e => e.Language == emp.Language).ToList();
+                    }
                 }
                 return DownloadRevenue(employeeData, emp.StartDate, emp.EndDate);
             }
@@ -114,13 +167,53 @@ namespace DemoProject.Controllers
             {
                 if (employeeData != null)
                 {
-                    employeeData = FilterEmployeeData(emp, employeeData);
+                    if (!string.IsNullOrEmpty(emp.Name))
+                    {
+                        employeeData = employeeData.Where(e => e.Name == emp.Name).ToList();
+                    }
+                    if (!string.IsNullOrEmpty(emp.District))
+                    {
+                        employeeData = employeeData.Where(e => e.District == emp.District).ToList();
+                    }
+                    if (!string.IsNullOrEmpty(emp.PU))
+                    {
+                        employeeData = employeeData.Where(e => e.PU == emp.PU).ToList();
+                    }
+                    if (!string.IsNullOrEmpty(emp.State))
+                    {
+                        employeeData = employeeData.Where(e => e.CSGhead == emp.State).ToList();
+                    }
+                    if (!string.IsNullOrEmpty(emp.PUMapped))
+                    {
+                        employeeData = employeeData.Where(e => e.PUMapped == emp.PUMapped).ToList();
+                    }
+                    if (!string.IsNullOrEmpty(emp.DM))
+                    {
+                        employeeData = employeeData.Where(e => e.DM == emp.DM).ToList();
+                    }
+                    if (!string.IsNullOrEmpty(emp.CSG))
+                    {
+                        employeeData = employeeData.Where(e => e.CSG == emp.CSG).ToList();
+                    }
+                    if (!string.IsNullOrEmpty(emp.Language))
+                    {
+                        employeeData = employeeData.Where(e => e.Language == emp.Language).ToList();
+                    }
                 }
                 return DownloadVolume(employeeData, emp.StartDate, emp.EndDate);
             }
             else if (action == "Graph")
             {
-                return RedirectToAction("Graph");
+                var selectedDates = Request.Form["Date"]; 
+                if (!string.IsNullOrEmpty(selectedDates))
+                {
+                    return RedirectToAction("Graph", new { dates = selectedDates });
+                }
+                else
+                {   
+                    TempData["ErrorMessage"] = "Please select at least one date.";
+                    return RedirectToAction("Index");
+                }
             }
             else if (action == "Revenue")
             {
@@ -133,6 +226,38 @@ namespace DemoProject.Controllers
 
             if (employeeData != null)
             {
+                if (!string.IsNullOrEmpty(emp.Name))
+                {
+                    employeeData = employeeData.Where(e => e.Name == emp.Name).ToList();
+                }
+                if (!string.IsNullOrEmpty(emp.District))
+                {
+                    employeeData = employeeData.Where(e => e.District == emp.District).ToList();
+                }
+                if (!string.IsNullOrEmpty(emp.PU))
+                {
+                    employeeData = employeeData.Where(e => e.PU == emp.PU).ToList();
+                }
+                if (!string.IsNullOrEmpty(emp.State))
+                {
+                    employeeData = employeeData.Where(e => e.CSGhead == emp.State).ToList();
+                }
+                if (!string.IsNullOrEmpty(emp.PUMapped))
+                {
+                    employeeData = employeeData.Where(e => e.PUMapped == emp.PUMapped).ToList();
+                }
+                if (!string.IsNullOrEmpty(emp.DM))
+                {
+                    employeeData = employeeData.Where(e => e.DM == emp.DM).ToList();
+                }
+                if (!string.IsNullOrEmpty(emp.CSG))
+                {
+                    employeeData = employeeData.Where(e => e.CSG == emp.CSG).ToList();
+                }
+                if (!string.IsNullOrEmpty(emp.Language))
+                {
+                    employeeData = employeeData.Where(e => e.Language == emp.Language).ToList();
+                }
                 ViewBag.EmployeeList = employeeData;
             }
             ViewBag.blnRevenue = blnRevenue;
@@ -157,49 +282,67 @@ namespace DemoProject.Controllers
                 employee.EmployeeList8 = CSGListItems;
             }
 
+            if (!string.IsNullOrEmpty(emp.PU))
+            {
+                var PUMapped = _dataAccessLayer.GetPUMappedbyPU(emp.PU);
+                var PUMappedListItems = PUMapped.Select(d => new SelectListItem { Text = d, Value = d }).ToList();
+                PUMappedListItems.Insert(0, new SelectListItem { Text = "--Select PUMapped--", Value = "" });
 
+                employee.EmployeeList8 = PUMappedListItems;
+            }
+            //var employeet = _dataAccessLayer.GetAllEmployees().ToList();
+            //int totalRecords = employeet.Count();
+            //int pageSize = 5;
+            //int totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
+            //int recSkip = (currentPage - 1) * pageSize;
+            //var data = employeet.Skip(recSkip).Take(pageSize).ToList();
+
+           
+            //emp.CurrentPage = currentPage;
+            //emp.PageSize = pageSize;
+            //emp.TotalPages = totalPages;
+           
             return View(employee);
         }
 
-        private IEnumerable<Employee> FilterEmployeeData(Employee emp, IEnumerable<Employee> employeeData)
-        {
-            if (!string.IsNullOrEmpty(emp.Name))
-            {
-                employeeData = employeeData.Where(e => e.Name == emp.Name).ToList();
-            }
-            if (!string.IsNullOrEmpty(emp.District))
-            {
-                employeeData = employeeData.Where(e => e.District == emp.District).ToList();
-            }
-            if (!string.IsNullOrEmpty(emp.PU))
-            {
-                employeeData = employeeData.Where(e => e.PU == emp.PU).ToList();
-            }
-            if (!string.IsNullOrEmpty(emp.State))
-            {
-                employeeData = employeeData.Where(e => e.CSGhead == emp.State).ToList();
-            }
-            if (!string.IsNullOrEmpty(emp.PUMapped))
-            {
-                employeeData = employeeData.Where(e => e.PUMapped == emp.PUMapped).ToList();
-            }
-            if (!string.IsNullOrEmpty(emp.DM))
-            {
-                employeeData = employeeData.Where(e => e.DM == emp.DM).ToList();
-            }
-            if (!string.IsNullOrEmpty(emp.CSG))
-            {
-                employeeData = employeeData.Where(e => e.CSG == emp.CSG).ToList();
-            }
-            if (!string.IsNullOrEmpty(emp.Language))
-            {
-                employeeData = employeeData.Where(e => e.Language == emp.Language).ToList();
-            }
-            return employeeData.ToList();
-        }
+        //private IEnumerable<Employee> FilterEmployeeData(Employee emp, IEnumerable<Employee> employeeData)
+        //{
+        //    if (!string.IsNullOrEmpty(emp.Name))
+        //    {
+        //        employeeData = employeeData.Where(e => e.Name == emp.Name).ToList();
+        //    }
+        //    if (!string.IsNullOrEmpty(emp.District))
+        //    {
+        //        employeeData = employeeData.Where(e => e.District == emp.District).ToList();
+        //    }
+        //    if (!string.IsNullOrEmpty(emp.PU))
+        //    {
+        //        employeeData = employeeData.Where(e => e.PU == emp.PU).ToList();
+        //    }
+        //    if (!string.IsNullOrEmpty(emp.State))
+        //    {
+        //        employeeData = employeeData.Where(e => e.CSGhead == emp.State).ToList();
+        //    }
+        //    if (!string.IsNullOrEmpty(emp.PUMapped))
+        //    {
+        //        employeeData = employeeData.Where(e => e.PUMapped == emp.PUMapped).ToList();
+        //    }
+        //    if (!string.IsNullOrEmpty(emp.DM))
+        //    {
+        //        employeeData = employeeData.Where(e => e.DM == emp.DM).ToList();
+        //    }
+        //    if (!string.IsNullOrEmpty(emp.CSG))
+        //    {
+        //        employeeData = employeeData.Where(e => e.CSG == emp.CSG).ToList();
+        //    }
+        //    if (!string.IsNullOrEmpty(emp.Language))
+        //    {
+        //        employeeData = employeeData.Where(e => e.Language == emp.Language).ToList();
+        //    }
+        //    return employeeData;
+        //}
 
-        // Controller Action Methods
-        [HttpGet]
+       [HttpGet]
         public IActionResult GetDistrictsByState(Employee emp)
         {
             var districts = _dataAccessLayer.GetDistrictsByState(emp.State);
@@ -219,12 +362,34 @@ namespace DemoProject.Controllers
             return Json(CSGListItems);
         }
 
-        public IActionResult Graph()
+        [HttpGet]
+        public IActionResult GetPUMappedbyPU(Employee emp)
         {
-            var startDate = DateTime.Today.AddYears(-1); // Example start date
-            var endDate = DateTime.Today; // Example end date
+            var PUMapped = _dataAccessLayer.GetPUMappedbyPU(emp.PU);
+            var PUMappedListItems = PUMapped.Select(d => new SelectListItem { Text = d, Value = d }).ToList();
+            PUMappedListItems.Insert(0, new SelectListItem { Text = "--Select PUMapped--", Value = "" });        
+            return Json(PUMappedListItems);
+        }
+        //[HttpPost]
+        public IActionResult Graph(string[] dates)
+        {
+            List<DateTime> selectedDates = new List<DateTime>();
 
-            var graphData = _dataAccessLayer.GetGraphDataForChart(startDate, endDate);
+            foreach (string dateString in dates)
+            {
+                DateTime parsedDate;
+                if (DateTime.TryParse(dateString, out parsedDate))
+                {
+                    selectedDates.Add(parsedDate);
+                }
+                else
+                {
+                    // Handle invalid date string
+                    // For example:
+                    Console.WriteLine($"Invalid date string: {dateString}");
+                }
+            }
+            var graphData = _dataAccessLayer.GetGraphDataForChart(selectedDates);
             return View(graphData);
         }
 
@@ -361,7 +526,7 @@ namespace DemoProject.Controllers
                     worksheet.Cells["J2"].Value = "CSG Head";
                     worksheet.Cells["K2"].Value = "CSG";
                     worksheet.Cells["L2"].Value = "RevVar";
-                   
+
 
 
                     // Apply styling to the header row
@@ -392,7 +557,7 @@ namespace DemoProject.Controllers
                         worksheet.Cells[row, 10].Value = employee.CSGhead;
                         worksheet.Cells[row, 11].Value = employee.CSG;
                         worksheet.Cells[row, 12].Value = employee.RevVar;
-                      
+
                         row++;
                     }
 
@@ -676,10 +841,7 @@ namespace DemoProject.Controllers
         {
             Employee employee = new Employee();
             employee.EmployeeList8 = new List<SelectListItem>();
-            var data = _dataAccessLayer.GetAllEmployees()
-                                                   .Select(e => e.CSG)
-                                                   .Distinct()
-                                                   .OrderBy(d => d);
+            var data = _dataAccessLayer.GetCSG();
 
             employee.EmployeeList8.Add(new SelectListItem
             {
@@ -701,10 +863,7 @@ namespace DemoProject.Controllers
         {
             Employee employee = new Employee();
             employee.EmployeeList9 = new List<SelectListItem>();
-            var data = _dataAccessLayer.GetAllEmployees()
-                                                   .Select(e => e.CSGhead)
-                                                   .Distinct()
-                                                   .OrderBy(d => d);
+            var data = _dataAccessLayer.GetCSGhead();
 
             employee.EmployeeList9.Add(new SelectListItem
             {
@@ -743,6 +902,28 @@ namespace DemoProject.Controllers
                 {
                     Text = item,
                     Value = item
+                });
+            }
+            return employee;
+        }
+        private Employee BindDropDown11()
+        {
+            Employee employee = new Employee();
+            employee.EmployeeList11 = new List<SelectListItem>();
+            var data = _dataAccessLayer.GetJoiningDate();
+
+            employee.EmployeeList11.Add(new SelectListItem
+            {
+                Text = "--Select Date--",
+                Value = ""
+            });
+
+            foreach (var item in data)
+            {
+                employee.EmployeeList11.Add(new SelectListItem
+                {
+                    Text = item.ToString(),
+                    Value = item.ToString()
                 });
             }
             return employee;

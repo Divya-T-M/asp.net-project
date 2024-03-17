@@ -95,7 +95,8 @@
             </select>
         </div> 
     </div>
-    <div>
+    <div class="row">
+        <div class="col-md-5">
         <br />
         <input type="submit" value="Search" class="btn btn-success" id="searchButton" />  
         <input type="submit" name="action" value="Revenue" class="btn btn-success"/>
@@ -112,7 +113,17 @@
         {
             <input type="submit" name="action" value="Download" class="btn btn-primary" />
         }
-        <input type="submit" name="action" value="Graph" class="btn btn-warning" />
+            <input type="submit" name="action" value="Graph" class="btn btn-warning" id="graphButton" />
+        </div>
+        <div class="col-md-3">
+            <label class="form-label">Select Date</label>
+            <select class="form-control" asp-for="Date" id="dateSelect" multiple="true">
+                @foreach (var item in Model.EmployeeList11)
+                {
+                    <option value="@item.Value">@item.Text</option>
+                }
+            </select>
+        </div>
     </div>
 </form>
 
@@ -187,12 +198,40 @@
                             <td>@employee.RevVar</td>
                             <td>@employee.VolVar</td>
                         }
-                        ]
+                        
                     </tr>
                 }
             </tbody>
         </table>
    @*  </div> *@
+   @*  <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+            @for(int i = 1; i <= Model.TotalPages; i++)
+            {
+                if(i==Model.CurrentPage)
+                {
+                    <li class="page-item"><a class="page-link" href="/Employee/Employees?term">1</a></li>
+                }
+                else
+                {
+                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                }
+            }
+            
+            
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav> *@
     }
   
 
@@ -200,6 +239,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
     @* <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> *@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+   
+       
+
 
     <script>
         $(document).ready(function () {
@@ -212,47 +254,53 @@
                     $('#EndDate').val('');
                 }
             });
+            $('#dateSelect').select2({
+                placeholder: "--Select dates--",
+                allowClear: true,
+                closeOnSelect: false
+            });
 
             $('.searchable-dropdown').select2();
 
-            var table = $('#employeeTable').DataTable({
-                "columns": [
-                    {
-                        "className": 'details'
-                    },
-                    { "data": "State" },
-                    { "data": "District" },
-                    { "data": "Language" }
-                ],
-                "order": [[1, 'asc']]
-            });
-
-            $('#employeeTable tbody').on('click', 'td.details', function () {
-                var tr = $(this).closest('tr');
-                var row = table.row(tr);
-
-                if (row.child.isShown()) {
-                    row.child.hide();
-                    tr.removeClass('shown');
-                }
-                else {
-                    row.child(format(row.data())).show();
-                    tr.addClass('shown');
-                }
-            });
-
-            // $('th, td').not(':nth-child(1), :nth-child(2), :nth-child(12), :nth-child(13)').hide();
-
-            // $('td:nth-child(2)').click(function () {
-            //     $('th:nth-child(3), td:nth-child(3)').toggle();
+            // var table = $('#employeeTable').DataTable({
+            //     "columns": [
+            //         {
+            //             "className": 'details'
+            //         },
+            //         { "data": "State" },
+            //         { "data": "District" },
+            //         { "data": "Language" }
+            //     ],
+            //     "order": [[1, 'asc']]
             // });
 
-            // $('td:nth-child(3)').click(function () {
-            //     $('th:nth-child(4), td:nth-child(4), th:nth-child(5), td:nth-child(5), th:nth-child(6), td:nth-child(6), th:nth-child(7), td:nth-child(7), th:nth-child(8), td:nth-child(8), th:nth-child(9), td:nth-child(9), th:nth-child(10), td:nth-child(10), th:nth-child(11), td:nth-child(11)').toggle();
-            // });
-           
-                
+            // $('#employeeTable tbody').on('click', 'td.details', function () {
+            //     var tr = $(this).closest('tr');
+            //     var row = table.row(tr);
 
+            //     if (row.child.isShown()) {
+            //         row.child.hide();
+            //         tr.removeClass('shown');
+            //     }
+            //     else {
+            //         row.child(format(row.data())).show();
+            //         tr.addClass('shown');
+            //     }
+            // });
+
+            $('#graphButton').click(function () {
+                // Get the selected dates from the dropdown
+                var selectedDates = $('#dateSelect').val();
+
+                // Check if any date is selected
+                if (selectedDates && selectedDates.length > 0) {
+                    // Redirect to the Graph action with selected dates as query parameters
+                    window.location.href = '@Url.Action("Graph")' + '?dates=' + selectedDates.join(',');
+                } else {
+                    // If no date is selected, display an alert or handle it as needed
+                    alert('Please select at least one date.');
+                }
+            });
                    
 
             $('#StateDropdown').change(function () {
@@ -321,19 +369,23 @@
                 });
             });
         });
-      
-    </script>
-}
 
-@* @section Scripts {
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+        function formatState(state) {
+            if (!state.id) {
+                return state.text;
+            }
+            var $state = $(
+                '<span><input type="checkbox" class="select2-checkbox" id="' + state.id + '" selected/> ' + state.text + '</span>'
+            );
+            return $state;
+        }
+
+    </script>
 
     <script>
         $(document).ready(function () {
-             $('.searchable-dropdown').select2();
-            $('#nameDropdown, #districtDropdown, #PUDropdown, #PUMappedDropdown, #DMDropdown, #CSGDropdown, #LanguageDropdown,#CSGheadDropdown').change(function () {
+            
+            $('#nameDropdown, #districtDropdown, #PUDropdown, #PUMappedDropdown, #DMDropdown, #CSGDropdown, #StateDropdown,#CSGheadDropdown,#CSGDropdown').change(function () {
                 filterTable();
             });
         });
@@ -345,8 +397,9 @@
             var puMappedValue = $('#PUMappedDropdown').val().toLowerCase();
             var dmValue = $('#DMDropdown').val().toLowerCase();
             var csgValue = $('#CSGDropdown').val().toLowerCase();
-            var LanguageValue = $('#LanguageDropdown').val().toLowerCase();
+            var StateValue = $('#StateDropdown').val().toLowerCase();
             var CSGheadValue = $('#CSGheadDropdown').val().toLowerCase();
+            var CSGValue = $('#CSGDropdown').val().toLowerCase();
 
             $('#employeeTable tbody tr').each(function () {
                 var text = $(this).text().toLowerCase();
@@ -356,10 +409,57 @@
                 var puMappedMatch = puMappedValue === '' || text.indexOf(puMappedValue) !== -1;
                 var dmMatch = dmValue === '' || text.indexOf(dmValue) !== -1;
                 var csgMatch = csgValue === '' || text.indexOf(csgValue) !== -1;
-                var LanguageMatch = LanguageValue === '' || text.indexOf(LanguageValue) !== -1;
+                var StateMatch = StateValue === '' || text.indexOf(StateValue) !== -1;
                 var CSGheadMatch = CSGheadValue === '' || text.indexOf(CSGheadValue) !== -1;
+                var CSGMatch = CSGValue === '' || text.indexOf(CSGValue) !== -1;
 
-                if (nameMatch && districtMatch && puMatch && puMappedMatch && dmMatch && csgMatch && LanguageMatch && CSGheadMatch) {
+                if (nameMatch && districtMatch && puMatch && puMappedMatch && dmMatch && csgMatch && StateMatch && CSGheadMatch && CSGMatch) {
+                    $(this).show();
+                } else {
+                    $(this).hide();
+                }
+            });
+        }
+    </script>
+}
+
+@* @section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+             $('.searchable-dropdown').select2();
+            $('#nameDropdown, #districtDropdown, #PUDropdown, #PUMappedDropdown, #DMDropdown, #CSGDropdown, #StateDropdown,#CSGheadDropdown,,#CSGDropdown').change(function () {
+                filterTable();
+            });
+        });
+
+        function filterTable() {
+            var nameValue = $('#nameDropdown').val().toLowerCase();
+            var districtValue = $('#districtDropdown').val().toLowerCase();
+            var puValue = $('#PUDropdown').val().toLowerCase();
+            var puMappedValue = $('#PUMappedDropdown').val().toLowerCase();
+            var dmValue = $('#DMDropdown').val().toLowerCase();
+            var csgValue = $('#CSGDropdown').val().toLowerCase();
+            var StateValue = $('#StateDropdown').val().toLowerCase();
+            var CSGheadValue = $('#CSGheadDropdown').val().toLowerCase();
+            var CSGValue = $('#CSGDropdown').val().toLowerCase();
+
+            $('#employeeTable tbody tr').each(function () {
+                var text = $(this).text().toLowerCase();
+                var nameMatch = nameValue === '' || text.indexOf(nameValue) !== -1;
+                var districtMatch = districtValue === '' || text.indexOf(districtValue) !== -1;
+                var puMatch = puValue === '' || text.indexOf(puValue) !== -1;
+                var puMappedMatch = puMappedValue === '' || text.indexOf(puMappedValue) !== -1;
+                var dmMatch = dmValue === '' || text.indexOf(dmValue) !== -1;
+                var csgMatch = csgValue === '' || text.indexOf(csgValue) !== -1;
+                var StateMatch = StateValue === '' || text.indexOf(StateValue) !== -1;
+                var CSGheadMatch = CSGheadValue === '' || text.indexOf(CSGheadValue) !== -1;
+                var CSGMatch = CSGValue === '' || text.indexOf(CSGValue) !== -1;
+
+                if (nameMatch && districtMatch && puMatch && puMappedMatch && dmMatch && csgMatch && StateMatch && CSGheadMatch && CSGMatch) {
                     $(this).show();
                 } else {
                     $(this).hide();
