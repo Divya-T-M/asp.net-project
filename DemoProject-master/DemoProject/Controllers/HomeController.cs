@@ -54,10 +54,11 @@ namespace DemoProject.Controllers
         }
 
         [HttpPost]
-        public IActionResult Index(Employee emp, string action)
+        public IActionResult Index(Employee emp, string action, int currentPage = 1, int pageSize = 10)
         {
             bool blnRevenue = false;
             bool blnVolume = false;
+            bool blnVariance = false;
 
             var employee = BindDropDown();
             var employee2 = BindDropDown2();
@@ -223,6 +224,15 @@ namespace DemoProject.Controllers
             {
                 blnVolume = true;
             }
+            else if (action == "Variance")
+            {
+                blnVariance = true;
+                employeeData = _dataAccessLayer.ShowSummary(emp.StartDate, emp.EndDate);
+                ViewBag.VarianceReport = employeeData;
+                ViewBag.blnVariance = blnVariance;
+               
+                return View(employee);
+            }
 
             if (employeeData != null)
             {
@@ -290,57 +300,22 @@ namespace DemoProject.Controllers
 
                 employee.EmployeeList8 = PUMappedListItems;
             }
-            //var employeet = _dataAccessLayer.GetAllEmployees().ToList();
-            //int totalRecords = employeet.Count();
-            //int pageSize = 5;
+            //int totalRecords = employeeData.Count();
             //int totalPages = (int)Math.Ceiling(totalRecords / (double)pageSize);
             //int recSkip = (currentPage - 1) * pageSize;
-            //var data = employeet.Skip(recSkip).Take(pageSize).ToList();
+            //employeeData = employeeData.Skip(recSkip).Take(pageSize).ToList();
 
-           
+            //// Pass pagination data to the view
             //emp.CurrentPage = currentPage;
             //emp.PageSize = pageSize;
             //emp.TotalPages = totalPages;
-           
+            //ViewBag.employeeData = employeeData;
+          
+
             return View(employee);
         }
 
-        //private IEnumerable<Employee> FilterEmployeeData(Employee emp, IEnumerable<Employee> employeeData)
-        //{
-        //    if (!string.IsNullOrEmpty(emp.Name))
-        //    {
-        //        employeeData = employeeData.Where(e => e.Name == emp.Name).ToList();
-        //    }
-        //    if (!string.IsNullOrEmpty(emp.District))
-        //    {
-        //        employeeData = employeeData.Where(e => e.District == emp.District).ToList();
-        //    }
-        //    if (!string.IsNullOrEmpty(emp.PU))
-        //    {
-        //        employeeData = employeeData.Where(e => e.PU == emp.PU).ToList();
-        //    }
-        //    if (!string.IsNullOrEmpty(emp.State))
-        //    {
-        //        employeeData = employeeData.Where(e => e.CSGhead == emp.State).ToList();
-        //    }
-        //    if (!string.IsNullOrEmpty(emp.PUMapped))
-        //    {
-        //        employeeData = employeeData.Where(e => e.PUMapped == emp.PUMapped).ToList();
-        //    }
-        //    if (!string.IsNullOrEmpty(emp.DM))
-        //    {
-        //        employeeData = employeeData.Where(e => e.DM == emp.DM).ToList();
-        //    }
-        //    if (!string.IsNullOrEmpty(emp.CSG))
-        //    {
-        //        employeeData = employeeData.Where(e => e.CSG == emp.CSG).ToList();
-        //    }
-        //    if (!string.IsNullOrEmpty(emp.Language))
-        //    {
-        //        employeeData = employeeData.Where(e => e.Language == emp.Language).ToList();
-        //    }
-        //    return employeeData;
-        //}
+        
 
        [HttpGet]
         public IActionResult GetDistrictsByState(Employee emp)

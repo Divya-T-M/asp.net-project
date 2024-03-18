@@ -96,8 +96,9 @@
         </div> 
     </div>
     <div class="row">
-        <div class="col-md-5">
+        <div class="col-md-6">
         <br />
+        <input type="submit" name="action" value="Variance" class="btn btn-danger" id="varianceButton" />
         <input type="submit" value="Search" class="btn btn-success" id="searchButton" />  
         <input type="submit" name="action" value="Revenue" class="btn btn-success"/>
         <input type="submit" name="action" value="Volume" class="btn btn-success"/>
@@ -126,11 +127,33 @@
         </div>
     </div>
 </form>
-
-@if (ViewBag.EmployeeList != null && ViewBag.EmployeeList.Count > 0)
+@if ((bool)(ViewBag.blnVariance ?? false))
 {
-   @*  <div class="table-responsive" style="margin-top:11px;"> *@
-       @*  <div>
+    @if (ViewBag.VarianceReport != null && ViewBag.VarianceReport.Count > 0)
+    {
+        <table id="employeeTable" class="table table-bordered">
+            <tr style="background-color: #add8e6;">
+                <th>State</th>
+                <th>RevVar</th>
+                <th>VolVar</th>
+            </tr>
+            @foreach (var item in ViewBag.VarianceReport)
+            {
+                <tr>
+                    <td>@item.State</td>
+                    <td>@item.RevVar</td>
+                    <td>@item.VolVar</td>
+                </tr>
+            }
+        </table>
+    }
+}
+@if (!(bool)(ViewBag.blnVariance ?? false))
+{
+@if (ViewBag.EmployeeList != null && ViewBag.EmployeeList.Count > 0)
+    {
+        @*  <div class="table-responsive" style="margin-top:11px;"> *@
+        @*  <div>
             <input type="text" id="searchInput" class="form-control" placeholder="Search...">
         </div> *@
         <table id="employeeTable" class="table table-bordered">
@@ -143,7 +166,7 @@
                     <th colspan="2">Variance</th>
                 </tr>
                 <tr style="background-color: #add8e6;">
-                    
+
                     <th scope="col">ID</th>  
                     <th scope="col">State</th>
                     <th scope="col">District</th>
@@ -198,41 +221,39 @@
                             <td>@employee.RevVar</td>
                             <td>@employee.VolVar</td>
                         }
-                        
+
                     </tr>
                 }
             </tbody>
         </table>
-   @*  </div> *@
-   @*  <nav aria-label="Page navigation example">
-        <ul class="pagination">
-            <li class="page-item">
-                <a class="page-link" href="#" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-            @for(int i = 1; i <= Model.TotalPages; i++)
-            {
-                if(i==Model.CurrentPage)
-                {
-                    <li class="page-item"><a class="page-link" href="/Employee/Employees?term">1</a></li>
-                }
-                else
-                {
-                    <li class="page-item"><a class="page-link" href="#">2</a></li>
-                }
-            }
-            
-            
-            <li class="page-item"><a class="page-link" href="#">3</a></li>
-            <li class="page-item">
-                <a class="page-link" href="#" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
-        </ul>
-    </nav> *@
+        @*  </div> *@
     }
+
+}
+
+
+   @*   @if (Model.TotalPages > 1)
+    {
+        <div class="pagination">
+            @if (Model.CurrentPage > 1)
+            {
+                <a href="@Url.Action("Index", new { currentPage = 1, pageSize = Model.PageSize })">First</a>
+                <a href="@Url.Action("Index", new { currentPage = Model.CurrentPage - 1, pageSize = Model.PageSize })">Previous</a>
+            }
+
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <a href="@Url.Action("Index", new { currentPage = i, pageSize = Model.PageSize })" class="@(i == Model.CurrentPage ? "active" : "")">@i</a>
+            }
+
+            @if (Model.CurrentPage < Model.TotalPages)
+            {
+                <a href="@Url.Action("Index", new { currentPage = Model.CurrentPage + 1, pageSize = Model.PageSize })">Next</a>
+                <a href="@Url.Action("Index", new { currentPage = Model.TotalPages, pageSize = Model.PageSize })">Last</a>
+            }
+        </div>
+    }
+ *@
   
 
  @section Scripts {

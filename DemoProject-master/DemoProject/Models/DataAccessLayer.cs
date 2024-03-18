@@ -1,4 +1,5 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
@@ -363,7 +364,42 @@ namespace DemoProject.Models
             }
             return graphData;
         }
+      
 
+        public IEnumerable<Employee> ShowSummary(DateTime startDate, DateTime endDate)
+        {
+            List<Employee> employeeSummaries = new List<Employee>();
+            try
+            {
+                using (SqlConnection connection = new SqlConnection(_connectionString))
+                using (SqlCommand command = new SqlCommand("sp_employee_summary", connection))
+                {
+                    command.CommandType = CommandType.StoredProcedure;
+                    command.Parameters.AddWithValue("@StartDate", startDate);
+                    command.Parameters.AddWithValue("@EndDate", endDate);
+                    connection.Open();
+
+                    using (SqlDataReader reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                           
+                            Employee summary = new Employee();
+                            summary.State = reader["State"].ToString();
+                            summary.RevVar = reader.GetDouble(reader.GetOrdinal("RevVar"));
+                            summary.VolVar = reader.GetDouble(reader.GetOrdinal("VolVar"));
+                            employeeSummaries.Add(summary);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+           
+            return employeeSummaries;
+        }
 
 
     }
