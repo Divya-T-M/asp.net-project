@@ -1,0 +1,64 @@
+USE [master]
+GO
+
+/****** Object:  Table [dbo].[Employee]    Script Date: 31-Mar-24 7:43:21 AM ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[Employee](
+	[EmpId] [int] NULL,
+	[EmpName] [varchar](50) NULL,
+	[EmpJoiningdate] [datetime] NULL,
+	[EmpDistrict] [varchar](50) NULL,
+	[Emplanguage] [varchar](50) NULL,
+	[PU] [varchar](50) NULL,
+	[PUMapped] [varchar](50) NULL,
+	[DM] [varchar](50) NULL,
+	[CSG] [varchar](50) NULL,
+	[CSGhead] [varchar](50) NULL,
+	[RevVar] [float] NULL,
+	[VolVar] [float] NULL,
+	[State] [varchar](50) NULL
+) ON [PRIMARY]
+GO
+
+
+USE [master]
+GO
+/****** Object:  StoredProcedure [dbo].[sp_employee]    Script Date: 31-Mar-24 7:46:01 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER procedure [dbo].[sp_employee]
+( 
+@StartDate datetime2,
+@enddate datetime2
+)
+as
+begin
+select * from Employee  
+end
+
+
+
+
+USE [master]
+GO
+/****** Object:  StoredProcedure [dbo].[sp_employee_2]    Script Date: 31-Mar-24 7:48:50 AM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+ALTER procedure [dbo].[sp_employee_2]
+( 
+@StartDate datetime2,
+@enddate datetime2
+)
+as
+begin
+select EmpJoiningdate, RevVar, VolVar from Employee where EmpJoiningdate BETWEEN @StartDate and @Enddate order by EmpJoiningdate desc;
+end
