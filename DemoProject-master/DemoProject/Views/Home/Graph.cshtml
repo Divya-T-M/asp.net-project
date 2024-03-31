@@ -1,0 +1,75 @@
+﻿@model IEnumerable<GraphData>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Graph</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <canvas id="myChart" width="800" height="400"></canvas>
+
+   <script>
+    var labels = [];
+    var revVarValues = [];
+    var volVarValues = [];
+
+    @foreach (var item in Model)
+    {
+        <text>labels.push('@item.Date');</text>
+        <text>revVarValues.push('@item.RevVar');</text>
+        <text>volVarValues.push('@item.VolVar');</text>
+    }
+
+    var ctx = document.getElementById('myChart').getContext('2d');
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Revenue Variation',
+                data: revVarValues,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1,
+                yAxisID: 'varAxis'
+            }, {
+                label: 'Volume Variation',
+                data: volVarValues,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1,
+                yAxisID: 'varAxis'
+            }]
+        },
+        options: {
+            scales: {
+                xAxis: [{
+                    type: 'time',
+                    time: {
+                        unit: 'day',
+                        displayFormats: {
+                            day: 'YYYY-MM-DD'
+                        }
+                    },
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Date'
+                    }
+                }],
+                yAxis: [{
+                    id: 'varAxis',
+                    position: 'left',
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Variation'
+                    }
+                }]
+            }
+        }
+    });
+</script>
+</body>
+</html> 
+
+
