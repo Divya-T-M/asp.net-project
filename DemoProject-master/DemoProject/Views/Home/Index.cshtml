@@ -94,7 +94,8 @@
                 }
             </select>
         </div> 
-    </div>
+    </div> 
+   @*  @Html.Partial("_Dropdowns", Model) *@
     <div class="row">
         <div class="col-md-6">
         <br />
@@ -116,7 +117,7 @@
         }
             <input type="submit" name="action" value="Graph" class="btn btn-warning" id="graphButton" />
         </div>
-        <div class="col-md-3">
+       @*  <div class="col-md-3">
             <label class="form-label">Select Date</label>
             <select class="form-control" asp-for="Date" id="dateSelect" multiple="true">
                 @foreach (var item in Model.EmployeeList11)
@@ -124,6 +125,21 @@
                     <option value="@item.Value">@item.Text</option>
                 }
             </select>
+        </div> *@
+         <div class="col-md-4">
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Select Categories
+                </button>
+                <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                    @foreach (var item in Model.EmployeeList12)
+                    {
+                        <div class="dropdown-item">
+                            <input type="checkbox" name="MultiDate" value="@item.Value" /> @item.Text
+                        </div>
+                    }
+                </div>
+            </div>
         </div>
     </div>
 </form>
@@ -218,7 +234,7 @@
                         }
                         @if (!ViewBag.blnRevenue && !ViewBag.blnVolume)
                         {
-                            <td>@employee.RevVar</td>
+                            <td>@employee.RevVar.ToString("N0")</td>
                             <td>@employee.VolVar</td>
                         }
 

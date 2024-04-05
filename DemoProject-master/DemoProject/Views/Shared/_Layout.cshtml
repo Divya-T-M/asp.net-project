@@ -9,7 +9,8 @@
     <link rel="stylesheet" href="~/DemoProject.styles.css" asp-append-version="true" />
     <link href="~/css/DatatableCss/dataTables.bootstrap.min.css" rel="stylesheet" />
     <link href="~/css/DatatableCss/jquery.dataTables.min.css" rel="stylesheet" />
-    
+    @* <link href="~/css/dataTables.dataTables.css" rel="stylesheet" /> *@
+   
 
 </head>
 <body>
@@ -21,16 +22,16 @@
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                @* <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Graph">Graph</a>
                         </li>
-                        <li class="nav-item">
+                       @*  <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                        </li> *@
                     </ul>
-                </div> *@
+                </div>
             </div>
         </nav>
     </header>
@@ -49,7 +50,9 @@
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     <script src="~/Datatable/jquery.dataTables.js"></script>
-    <script src="~/Datatable/jquery.dataTables.min.js"></script>
+    <script src="~/Datatable/jquery.dataTables.min.js"></script> 
+   @* <script src="~/Datatable/jquery-3.7.1.js"></script>
+    <script src="~/js/dataTable.js"></script> *@
     <script src="~/js/script.js"></script>
    
     @await RenderSectionAsync("Scripts", required: false)

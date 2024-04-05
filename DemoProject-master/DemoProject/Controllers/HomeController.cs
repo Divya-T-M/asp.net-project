@@ -205,16 +205,17 @@ namespace DemoProject.Controllers
             }
             else if (action == "Graph")
             {
-                var selectedDates = Request.Form["Date"]; 
-                if (!string.IsNullOrEmpty(selectedDates))
-                {
-                    return RedirectToAction("Graph", new { dates = selectedDates });
-                }
-                else
-                {   
-                    TempData["ErrorMessage"] = "Please select at least one date.";
-                    return RedirectToAction("Index");
-                }
+                //var selectedDates = Request.Form["Date"]; 
+                //if (!string.IsNullOrEmpty(selectedDates))
+                //{
+                //    return RedirectToAction("Graph", new { dates = selectedDates });
+                //}
+                //else
+                //{   
+                //    TempData["ErrorMessage"] = "Please select at least one date.";
+                //    return RedirectToAction("Index");
+                //}
+                return RedirectToAction("Graph");
             }
             else if (action == "Revenue")
             {
@@ -346,25 +347,32 @@ namespace DemoProject.Controllers
             return Json(PUMappedListItems);
         }
         //[HttpPost]
-        public IActionResult Graph(string[] dates)
-        {
-            List<DateTime> selectedDates = new List<DateTime>();
+        //public IActionResult Graph(string[] dates)
+        //{
+        //    List<DateTime> selectedDates = new List<DateTime>();
 
-            foreach (string dateString in dates)
-            {
-                DateTime parsedDate;
-                if (DateTime.TryParse(dateString, out parsedDate))
-                {
-                    selectedDates.Add(parsedDate);
-                }
-                else
-                {
-                    // Handle invalid date string
-                    // For example:
-                    Console.WriteLine($"Invalid date string: {dateString}");
-                }
-            }
-            var graphData = _dataAccessLayer.GetGraphDataForChart(selectedDates);
+        //    foreach (string dateString in dates)
+        //    {
+        //        DateTime parsedDate;
+        //        if (DateTime.TryParse(dateString, out parsedDate))
+        //        {
+        //            selectedDates.Add(parsedDate);
+        //        }
+        //        else
+        //        {
+        //            // Handle invalid date string
+        //            // For example:
+        //            Console.WriteLine($"Invalid date string: {dateString}");
+        //        }
+        //    }
+        //    var graphData = _dataAccessLayer.GetGraphDataForChart(selectedDates);
+        //    return View(graphData);
+        //}
+        public IActionResult Graph()
+        {
+            var startDate = DateTime.Today.AddYears(-1); // Example start date
+            var endDate = DateTime.Today; // Example end date
+            var graphData = _dataAccessLayer.GetGraphDataForChart(startDate, endDate);
             return View(graphData);
         }
 
@@ -896,6 +904,30 @@ namespace DemoProject.Controllers
             foreach (var item in data)
             {
                 employee.EmployeeList11.Add(new SelectListItem
+                {
+                    Text = item.ToString(),
+                    Value = item.ToString()
+                });
+            }
+            return employee;
+        }
+
+        private Employee BindDropDown12()
+        {
+            Employee employee = new Employee();
+            employee.EmployeeList12 = new List<SelectListItem>();
+            var data = _dataAccessLayer.GetAllEmployees().Select(e => e.JoiningDate).Distinct()
+                                                   .OrderBy(d => d);
+
+            employee.EmployeeList12.Add(new SelectListItem
+            {
+                Text = "--Select Year--",
+                Value = ""
+            });
+
+            foreach (var item in data)
+            {
+                employee.EmployeeList12.Add(new SelectListItem
                 {
                     Text = item.ToString(),
                     Value = item.ToString()
